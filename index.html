@@ -1,0 +1,1800 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>약수와 배수 로그라이크 카드게임</title>
+  <style>
+    :root {
+      --bg: #0f1021;
+      --panel: #1d1f3a;
+      --panel-2: #262a52;
+      --text: #f4f5ff;
+      --muted: #a6acd8;
+      --accent: #7df9ff;
+      --danger: #ff7aa2;
+      --good: #96f29b;
+      --warn: #ffd27d;
+      --border: #3d4272;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Apple SD Gothic Neo", sans-serif;
+      background: radial-gradient(circle at 10% 10%, #2a2f68 0%, var(--bg) 45%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 16px;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .topbar {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      min-width: 108px;
+      text-align: center;
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hp-text-player { color: var(--good); }
+    .hp-text-villain { color: var(--danger); }
+
+    .status-line {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: linear-gradient(180deg, var(--panel), #1b1d33);
+      padding: 10px;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      min-height: 210px;
+      display: grid;
+      grid-template-rows: 128px auto;
+      gap: 8px;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .card.selected {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(125, 249, 255, 0.25);
+    }
+
+    .img-placeholder {
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-align: center;
+      padding: 6px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .img-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+    }
+
+    .villain-box {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 0.85fr);
+      gap: 10px;
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(255, 122, 162, 0.08);
+    }
+
+    .card .img-placeholder {
+      height: 100%;
+    }
+
+    .villain-box .img-placeholder {
+      width: 220px;
+      height: 220px;
+      justify-self: start;
+    }
+
+    .name {
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 2px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .desc {
+      font-size: 0.82rem;
+      line-height: 1.35;
+      margin-top: 6px;
+      color: #e8e9ff;
+    }
+
+    .ability {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--warn);
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 5px;
+    }
+
+    .intent {
+      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px;
+      padding: 7px 9px;
+      font-size: 0.85rem;
+      color: #ffe6ee;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .audio-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .audio-controls input[type="range"] {
+      width: 140px;
+      accent-color: var(--accent);
+    }
+
+    .deck-status {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text);
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 650;
+    }
+
+    button:hover:not(:disabled) { border-color: var(--accent); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .map-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .map-node {
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 12px;
+      padding: 10px;
+      background: rgba(125,249,255,0.05);
+    }
+
+    .rule-list {
+      margin: 0;
+      padding-left: 20px;
+      color: #d8dbff;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .log {
+      max-height: 460px;
+      overflow: auto;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      display: grid;
+      gap: 6px;
+    }
+
+    .log .entry {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 7px 9px;
+    }
+
+    .tag {
+      display: inline-block;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 1px 7px;
+      margin-right: 5px;
+      font-size: 0.75rem;
+      color: #d4d8ff;
+    }
+
+    .reward-box {
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 9px;
+      margin-top: 10px;
+      background: rgba(150, 242, 155, 0.08);
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .calc-box {
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 9px;
+      background: rgba(125, 249, 255, 0.06);
+      font-size: 0.84rem;
+      color: #e4f9ff;
+      line-height: 1.45;
+    }
+
+    .deck-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 11, 22, 0.62);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 80;
+      padding: 18px;
+    }
+
+    .deck-modal.open {
+      display: flex;
+    }
+
+    .deck-modal-content {
+      width: min(980px, 95vw);
+      max-height: 88vh;
+      overflow: auto;
+      background: #181b33;
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .deck-modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .deck-sort-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .deck-sort-row select {
+      background: #20244a;
+      color: #f0f2ff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 8px;
+    }
+
+    .pile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .pile-box {
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(255,255,255,0.03);
+      min-height: 160px;
+    }
+
+    .pile-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+
+    .pile-cards {
+      display: grid;
+      gap: 6px;
+    }
+
+    .pile-card {
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 0.8rem;
+      background: rgba(255,255,255,0.04);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .footer-credit {
+      text-align: center;
+      color: rgba(244, 245, 255, 0.55);
+      font-size: 0.72rem;
+      margin: 6px 0 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .hp-panel {
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.05);
+      margin-bottom: 8px;
+    }
+
+    .hp-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.83rem;
+      margin-bottom: 6px;
+    }
+
+    .hp-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(255,255,255,0.14);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .hp-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    .hp-fill.player {
+      background: linear-gradient(90deg, #6de38a, #b4ffbe);
+    }
+
+    .hp-fill.villain {
+      background: linear-gradient(90deg, #ff7aa2, #ffc1d5);
+    }
+
+    #villainArea {
+      position: relative;
+      min-height: 40px;
+    }
+
+    .impact-villain {
+      animation: impactVillain 0.82s ease;
+    }
+
+    .impact-player {
+      animation: impactPlayer 0.82s ease;
+    }
+
+    .impact-swing {
+      animation: swingFlash 0.82s ease;
+    }
+
+    .card-lunge-player {
+      animation: cardLungePlayer 0.72s ease;
+      z-index: 9;
+      position: relative;
+    }
+
+    .card-lunge-villain {
+      animation: cardLungeVillain 0.72s ease;
+      z-index: 9;
+      position: relative;
+    }
+
+    .damage-pop {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      pointer-events: none;
+      animation: popUp 1.15s ease forwards;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      z-index: 12;
+    }
+
+    .damage-pop.dmg {
+      color: #ffd3de;
+    }
+
+    .damage-pop.block {
+      color: #d1f4ff;
+      top: 28px;
+      font-size: 0.8rem;
+    }
+
+    @keyframes impactVillain {
+      0% { transform: translateX(0); filter: brightness(1); }
+      30% { transform: translateX(-5px); filter: brightness(1.5); }
+      60% { transform: translateX(4px); }
+      100% { transform: translateX(0); filter: brightness(1); }
+    }
+
+    @keyframes impactPlayer {
+      0% { transform: translateX(0); filter: brightness(1); }
+      30% { transform: translateX(5px); filter: brightness(1.35); }
+      60% { transform: translateX(-4px); }
+      100% { transform: translateX(0); filter: brightness(1); }
+    }
+
+    @keyframes swingFlash {
+      0% { box-shadow: 0 0 0 0 rgba(255, 122, 162, 0); }
+      30% { box-shadow: 0 0 0 3px rgba(255, 122, 162, 0.45); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 122, 162, 0); }
+    }
+
+    @keyframes popUp {
+      0% { opacity: 0; transform: translateY(8px) scale(0.9); }
+      15% { opacity: 1; transform: translateY(0) scale(1.04); }
+      100% { opacity: 0; transform: translateY(-22px) scale(1); }
+    }
+
+    @keyframes cardLungePlayer {
+      0% { transform: translate(0, 0) scale(1); }
+      38% { transform: translate(-56px, -12px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    @keyframes cardLungeVillain {
+      0% { transform: translate(0, 0) scale(1); }
+      38% { transform: translate(44px, 10px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="topbar panel">
+      <div class="title">무한 수학 던전: 약수와 배수 로그라이크</div>
+      <div class="audio-controls">
+        <button id="bgmToggleBtn">배경음악 재생</button>
+        <label for="bgmVolumeRange">볼륨</label>
+        <input id="bgmVolumeRange" type="range" min="0" max="100" step="1" value="35">
+      </div>
+      <div class="stat">스테이지<br><strong id="stageText">1</strong></div>
+      <div class="stat">노드<br><strong id="nodeText">0</strong></div>
+    </section>
+
+    <section class="panel">
+      <h3>월드맵 / 빌런 정보</h3>
+      <div id="mapArea"></div>
+      <div id="villainArea"></div>
+      <div id="rewardArea"></div>
+      <div class="btn-row">
+        <button id="playBtn">턴 진행</button>
+        <button id="rerollBtn">핸드 새로고침(HP -4)</button>
+        <button id="newRunBtn">새 게임</button>
+        <button id="deckViewBtn">내 덱 보기</button>
+      </div>
+      <p id="statusLine" class="status-line"></p>
+      <hr style="border-color: rgba(255,255,255,0.15); margin: 12px 0;">
+      <h3>전투 로그</h3>
+      <div id="logBox" class="log"></div>
+    </section>
+
+    <section class="panel">
+      <h3>내 핸드 (1~3장 선택 후 턴 진행)</h3>
+      <div class="hp-panel" id="playerHpPanel">
+        <div class="hp-row">
+          <span>나 HP</span>
+          <strong id="playerHpText">0 / 0</strong>
+        </div>
+        <div class="hp-track">
+          <div class="hp-fill player" id="playerHpBar"></div>
+        </div>
+      </div>
+      <p id="deckStatus" class="deck-status"></p>
+      <div id="handCards" class="cards"></div>
+      <div id="calcArea" class="calc-box">카드 1~3장을 선택하면 이번 턴 예상 공격 계산이 표시됩니다.</div>
+      <hr style="border-color: rgba(255,255,255,0.15); margin: 12px 0;">
+      <h3>게임 규칙</h3>
+      <ul class="rule-list">
+        <li>첫 시작은 튜토리얼 스테이지이며 데미지 계산 과정을 단계별로 배웁니다.</li>
+        <li>월드맵에서 길(노드)을 선택해 각 스테이지 전투로 진입합니다.</li>
+        <li>카드를 1~3장 선택해 공격합니다. 1장은 공격력만, 2장/3장은 조건 성립 시 조합 보너스를 얻습니다.</li>
+        <li>3장 조합은 최대공약수/최소공배수 연결, 공통 배수 관계, 약수 관계 성립 시 추가 보너스를 얻습니다.</li>
+        <li>조합 조건이 성립하지 않으면 보너스 없이 카드 공격력 합만 적용됩니다.</li>
+        <li>빌런은 턴마다 의도(Intent)에 따라 공격, 방어 상승, 디버프(약화/취약/출혈) 중 하나를 사용합니다.</li>
+        <li>빌런의 체력을 0으로 만들면 보상을 선택하고 다음 스테이지로 넘어갑니다.</li>
+        <li>보상으로 새 카드 획득, 체력 회복, 최대 체력 증가, 디버프 제거 등을 고를 수 있습니다.</li>
+        <li>카드별 최소공배수 조합 보너스는 2장 선택 시에만 발동됩니다.</li>
+      </ul>
+    </section>
+  </div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.0001</div>
+
+  <div id="deckModal" class="deck-modal">
+    <div class="deck-modal-content">
+      <div class="deck-modal-top">
+        <h3 style="margin:0;">내 덱 구성</h3>
+        <button id="closeDeckModalBtn">닫기</button>
+      </div>
+      <div class="deck-sort-row">
+        <label for="deckSortSelect">정렬</label>
+        <select id="deckSortSelect">
+          <option value="number_desc">숫자 내림차순</option>
+          <option value="number_asc">숫자 오름차순</option>
+          <option value="attack_desc">공격력 내림차순</option>
+          <option value="attack_asc">공격력 오름차순</option>
+          <option value="name_asc">이름 오름차순</option>
+          <option value="name_desc">이름 내림차순</option>
+        </select>
+        <span id="deckCountSummary"></span>
+      </div>
+      <div class="pile-grid">
+        <section class="pile-box">
+          <div class="pile-title">현재 덱(드로우 더미)</div>
+          <div id="drawPileCards" class="pile-cards"></div>
+        </section>
+        <section class="pile-box">
+          <div class="pile-title">사용 더미(버림 더미)</div>
+          <div id="discardPileCards" class="pile-cards"></div>
+        </section>
+      </div>
+      <section class="pile-box" style="margin-top:10px;">
+        <div class="pile-title">전체 보유 카드(정렬 적용)</div>
+        <div id="ownedPileCards" class="pile-cards"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const CARD_LIBRARY = [
+      { id: "c1", number: 6, name: "숲의 수호자 엘드린", desc: "고대 수호수와 계약한 기사.", abilityText: "약수/배수 성립 시 피해 +3", ability: { onDivisibleDamage: 3 } },
+      { id: "c2", number: 8, name: "빙결 마녀 아리스", desc: "얼음을 엮어 적의 흐름을 묶는다.", abilityText: "최대공약수가 4 이상이면 보호막 +4", ability: { onGcdAtLeastShield: { min: 4, value: 4 } } },
+      { id: "c3", number: 9, name: "룬 사제 메리온", desc: "수의 균형으로 마력을 증폭한다.", abilityText: "두 수의 최소공배수가 36 이하이면 피해 +4", ability: { onLcmAtMostDamage: { max: 36, value: 4 } } },
+      { id: "c4", number: 10, name: "심연 창기사 카엘", desc: "심연의 창으로 직선을 꿰뚫는다.", abilityText: "기본 피해 +2", ability: { flatDamage: 2 } },
+      { id: "c5", number: 12, name: "천공 대장장이 브론", desc: "금속과 별빛을 단련한다.", abilityText: "약수/배수 성립 시 보호막 +3", ability: { onDivisibleShield: 3 } },
+      { id: "c6", number: 14, name: "황야 추적자 네르", desc: "바람 결을 읽는 추적자.", abilityText: "최대공약수만큼 추가 피해(최대 +6)", ability: { gcdDamageScaleCap: 6 } },
+      { id: "c7", number: 15, name: "불꽃 현자 루멘", desc: "전장의 리듬을 태워 승기를 만든다.", abilityText: "턴 종료 시 회복 +2", ability: { flatHeal: 2 } },
+      { id: "c8", number: 16, name: "지하성 방패병 도란", desc: "지맥의 진동으로 방패를 굳힌다.", abilityText: "기본 보호막 +3", ability: { flatShield: 3 } },
+      { id: "c9", number: 18, name: "폭풍 소환사 이스라", desc: "폭풍으로 수를 재배열한다.", abilityText: "공배수 공명 발동 시 피해 +5", ability: { onResonanceDamage: 5 } },
+      { id: "c10", number: 20, name: "심판관 발타르", desc: "질서를 강제하는 성역의 검.", abilityText: "상대 보호막 -2", ability: { enemyShieldBreak: 2 } },
+      { id: "c11", number: 21, name: "달 그림자 레인", desc: "달빛 틈에서 일격을 꽂는다.", abilityText: "최대공약수가 3 이상이면 피해 +3", ability: { onGcdAtLeastDamage: { min: 3, value: 3 } } },
+      { id: "c12", number: 24, name: "성채 기사 헥터", desc: "성문 앞에서 물러서지 않는다.", abilityText: "두 수의 최소공배수가 48 이하이면 보호막 +5", ability: { onLcmAtMostShield: { max: 48, value: 5 } } },
+      { id: "c13", number: 25, name: "사막 현인 사파", desc: "모래와 시간의 수를 읽는다.", abilityText: "약수/배수 미성립 시에도 피해 +2", ability: { nonDivisibleDamage: 2 } },
+      { id: "c14", number: 27, name: "마도 포병 세레프", desc: "연쇄 폭발로 경계를 무너뜨린다.", abilityText: "두 수의 최소공배수가 60 이하이면 피해 +6", ability: { onLcmAtMostDamage: { max: 60, value: 6 } } },
+      { id: "c15", number: 28, name: "호수의 창백 기사 닉스", desc: "잔잔한 수면처럼 반격한다.", abilityText: "받는 피해 2 감소(보호막 +2)", ability: { flatShield: 2 } },
+      { id: "c16", number: 30, name: "황금 용사 아우로", desc: "빛나는 갑옷으로 적진을 관통한다.", abilityText: "약수/배수 + 공명 동시 발동 시 피해 +5", ability: { comboFinisher: 5 } },
+      { id: "c17", number: 32, name: "빙벽 수호자 글라시온", desc: "얼어붙은 방벽을 펼친다.", abilityText: "최대공약수가 2 이상이면 보호막 +3", ability: { onGcdAtLeastShield: { min: 2, value: 3 } } },
+      { id: "c18", number: 35, name: "야성술사 미르카", desc: "짐승의 리듬으로 공명을 깨운다.", abilityText: "공배수 공명 시 회복 +3", ability: { onResonanceHeal: 3 } },
+      { id: "c19", number: 36, name: "천문 기사 오르테", desc: "별자리 각도로 약점을 찌른다.", abilityText: "기본 피해 +3 / 보호막 +1", ability: { flatDamage: 3, flatShield: 1 } },
+      { id: "c20", number: 40, name: "철벽 집정관 베라", desc: "거대한 수의 질량으로 압도한다.", abilityText: "두 수의 최소공배수가 80 이하이면 보호막 +4", ability: { onLcmAtMostShield: { max: 80, value: 4 } } }
+    ];
+
+    const VILLAIN_POOL = [
+      { name: "어둠 군주 모르간", desc: "황혼 마력을 뿜어내는 군주.", style: "aggressive" },
+      { name: "유령 기사 바르트", desc: "방패와 저주를 동시에 다루는 기사.", style: "defensive" },
+      { name: "심연 사도 네크라", desc: "약화와 출혈을 퍼뜨리는 사도.", style: "hexer" },
+      { name: "재앙술사 라그", desc: "방어와 강공을 번갈아 쓰는 술사.", style: "balanced" }
+    ];
+
+    const CARD_IMAGE_BY_ID = {
+      c1: "./Eldrin_Guardian_of_the_Forest.png",
+      c2: "./Alice_the_Ice_Witch.png",
+      c3: "./Merion_the_Rune_Priest.png",
+      c4: "./Kael_the_Abyssal_Lancer.png",
+      c5: "./Bron_the_Celestial_Blacksmith.png",
+      c6: "./Nere_the_Wasteland_Tracker.png",
+      c7: "./Lumen_the_Flame_Sage.png",
+      c8: "./Doran_the_Underground_Citadel_Shieldbearer.png",
+      c9: "./sra_the_Storm_Summoner.png",
+      c10: "./Valthar_the_Inquisitor.png",
+      c11: "./Lane_the_Moon_Shadow.png",
+      c12: "./Hector_the_Citadel_Knight.png",
+      c13: "./Safa_the_Desert_Sage.png",
+      c14: "./Seref_the_Magitech_Artillerist.png",
+      c15: "./Nyx_the_Pale_Knight_of_the_Lake.png",
+      c16: "./Aurro_the_Golden_Champion.png",
+      c17: "./Glacion_the_Ice_Wall_Guardian.png",
+      c18: "./Mirka_the_Beast-Tongue_Wildmage.png",
+      c19: "./Orte_the_Astromancy_Knight.png",
+      c20: "./Vera_the_Ironclad_Archon.png"
+    };
+
+    const VILLAIN_IMAGE_BY_NAME = {
+      "어둠 군주 모르간": "./Morgan_the_Dark_Lord.png",
+      "유령 기사 바르트": "./Bart_the_Phantom_Knight.png",
+      "심연 사도 네크라": "./Necra_the_Abyssal_Apostle.png",
+      "재앙술사 라그": "./Rag_the_Calamity_Sorcerer.png",
+      "훈련용 빌런 골렘": "./Training_Villain_Golem.png"
+    };
+
+    const state = {
+      stage: 1,
+      node: 0,
+      mode: "map",
+      selected: [],
+      currentMapChoices: [],
+      tutorial: {
+        active: true,
+        turn: 1
+      },
+      turnLocked: false,
+      player: {
+        hp: 72,
+        maxHp: 72,
+        deck: [],
+        discard: [],
+        hand: [],
+        pendingStageStartDraw: 0,
+        status: { weaken: 0, frail: 0, bleed: 0 }
+      },
+      deckView: {
+        open: false,
+        sortMode: "number_desc"
+      },
+      villain: null,
+      runOver: false
+    };
+
+    const mapAreaEl = document.getElementById("mapArea");
+    const villainAreaEl = document.getElementById("villainArea");
+    const rewardAreaEl = document.getElementById("rewardArea");
+    const handCardsEl = document.getElementById("handCards");
+    const logBoxEl = document.getElementById("logBox");
+    const stageTextEl = document.getElementById("stageText");
+    const nodeTextEl = document.getElementById("nodeText");
+    const playerHpPanelEl = document.getElementById("playerHpPanel");
+    const playerHpTextEl = document.getElementById("playerHpText");
+    const playerHpBarEl = document.getElementById("playerHpBar");
+    const deckStatusEl = document.getElementById("deckStatus");
+    const statusLineEl = document.getElementById("statusLine");
+    const calcAreaEl = document.getElementById("calcArea");
+    const playBtnEl = document.getElementById("playBtn");
+    const rerollBtnEl = document.getElementById("rerollBtn");
+    const newRunBtnEl = document.getElementById("newRunBtn");
+    const deckViewBtnEl = document.getElementById("deckViewBtn");
+    const bgmToggleBtnEl = document.getElementById("bgmToggleBtn");
+    const bgmVolumeRangeEl = document.getElementById("bgmVolumeRange");
+    const deckModalEl = document.getElementById("deckModal");
+    const closeDeckModalBtnEl = document.getElementById("closeDeckModalBtn");
+    const deckSortSelectEl = document.getElementById("deckSortSelect");
+    const deckCountSummaryEl = document.getElementById("deckCountSummary");
+    const drawPileCardsEl = document.getElementById("drawPileCards");
+    const discardPileCardsEl = document.getElementById("discardPileCards");
+    const ownedPileCardsEl = document.getElementById("ownedPileCards");
+    const bgmAudio = new Audio("./slowsound--131741.mp3");
+    let bgmManuallyPaused = false;
+    let bgmUnlockHooked = false;
+
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.35;
+
+    function gcd(a, b) {
+      let x = Math.abs(a);
+      let y = Math.abs(b);
+      while (y !== 0) {
+        const t = x % y;
+        x = y;
+        y = t;
+      }
+      return x || 1;
+    }
+
+    function lcm(a, b) {
+      return Math.abs(a * b) / gcd(a, b);
+    }
+
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = temp;
+      }
+      return copy;
+    }
+
+    function uid(cardId) {
+      return `${cardId}_${Math.random().toString(36).slice(2, 9)}`;
+    }
+
+    function getStageNumberMax(stage) {
+      if (stage <= 10) return 30;
+      if (stage <= 20) return 45;
+      if (stage <= 30) return 60;
+      if (stage <= 40) return 75;
+      if (stage <= 50) return 90;
+      return 100;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function createCardInstance(template, stageForNumber) {
+      const maxNumber = getStageNumberMax(Math.max(1, stageForNumber || 1));
+      const randomNumber = randomInt(1, maxNumber);
+      return {
+        ...template,
+        number: randomNumber,
+        uid: uid(template.id)
+      };
+    }
+
+    function createDeck(size, stageForNumber = state.stage) {
+      const deck = [];
+      for (let i = 0; i < size; i += 1) {
+        const template = CARD_LIBRARY[Math.floor(Math.random() * CARD_LIBRARY.length)];
+        deck.push(createCardInstance(template, stageForNumber));
+      }
+      return shuffle(deck);
+    }
+
+    function draw(entity, count) {
+      for (let i = 0; i < count; i += 1) {
+        if (entity.deck.length === 0) {
+          entity.deck = shuffle(entity.discard);
+          entity.discard = [];
+        }
+        if (entity.deck.length === 0) return;
+        entity.deck = shuffle(entity.deck);
+        const drawnCard = entity.deck.pop();
+        entity.hand.push(drawnCard);
+      }
+    }
+
+    function getCardImagePath(card) {
+      return CARD_IMAGE_BY_ID[card.id] || "";
+    }
+
+    function getVillainImagePath(villain) {
+      if (!villain) return "";
+      return VILLAIN_IMAGE_BY_NAME[villain.name] || "";
+    }
+
+    function sortCardsForView(cards, sortMode) {
+      const copy = [...cards];
+      if (sortMode === "number_asc") {
+        copy.sort((a, b) => a.number - b.number);
+        return copy;
+      }
+      if (sortMode === "attack_desc") {
+        copy.sort((a, b) => {
+          const atkDiff = cardAttackPower(b) - cardAttackPower(a);
+          if (atkDiff !== 0) return atkDiff;
+          return b.number - a.number;
+        });
+        return copy;
+      }
+      if (sortMode === "attack_asc") {
+        copy.sort((a, b) => {
+          const atkDiff = cardAttackPower(a) - cardAttackPower(b);
+          if (atkDiff !== 0) return atkDiff;
+          return a.number - b.number;
+        });
+        return copy;
+      }
+      if (sortMode === "name_asc") {
+        copy.sort((a, b) => a.name.localeCompare(b.name, "ko"));
+        return copy;
+      }
+      if (sortMode === "name_desc") {
+        copy.sort((a, b) => b.name.localeCompare(a.name, "ko"));
+        return copy;
+      }
+      copy.sort((a, b) => b.number - a.number);
+      return copy;
+    }
+
+    function renderPileCards(targetEl, cards) {
+      if (!targetEl) return;
+      if (!cards.length) {
+        targetEl.innerHTML = "<div class='pile-card'>없음</div>";
+        return;
+      }
+      targetEl.innerHTML = cards.map((card) => `
+        <div class="pile-card">
+          <span>${card.name}</span>
+          <span>숫자 ${card.number} / 공격력 ${cardAttackPower(card)}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderDeckModal() {
+      if (!deckModalEl) return;
+      if (!state.deckView.open) {
+        deckModalEl.classList.remove("open");
+        return;
+      }
+      deckModalEl.classList.add("open");
+      const drawSorted = sortCardsForView(state.player.deck, state.deckView.sortMode);
+      const discardSorted = sortCardsForView(state.player.discard, state.deckView.sortMode);
+      const ownedSorted = sortCardsForView(
+        [...state.player.deck, ...state.player.hand, ...state.player.discard],
+        state.deckView.sortMode
+      );
+      renderPileCards(drawPileCardsEl, drawSorted);
+      renderPileCards(discardPileCardsEl, discardSorted);
+      renderPileCards(ownedPileCardsEl, ownedSorted);
+      if (deckCountSummaryEl) {
+        const total = state.player.deck.length + state.player.discard.length + state.player.hand.length;
+        deckCountSummaryEl.textContent = `덱 ${state.player.deck.length}장 / 사용더미 ${state.player.discard.length}장 / 손패 ${state.player.hand.length}장 / 총 ${total}장`;
+      }
+      if (deckSortSelectEl) {
+        deckSortSelectEl.value = state.deckView.sortMode;
+      }
+    }
+
+    function cardAttackPower(card) {
+      return Math.floor(card.number / 5) + 2;
+    }
+
+    function gcd3(a, b, c) {
+      return gcd(gcd(a, b), c);
+    }
+
+    function evaluatePlayerSelection(cards) {
+      const nums = cards.map((c) => c.number);
+      const count = cards.length;
+      const baseDamage = cards.reduce((sum, card) => sum + cardAttackPower(card), 0);
+      let bonusDamage = 0;
+      let shield = 0;
+      const notes = [];
+      const bonusItems = [];
+      let hasValidBonus = false;
+
+      if (count === 1) {
+        notes.push("1장 단일 공격: 보너스 없이 공격력만 적용");
+      } else if (count === 2) {
+        const [a, b] = nums;
+        const pairLcm = lcm(a, b);
+        let anyTwoCardBonus = false;
+        if (a % b === 0 || b % a === 0) {
+          bonusDamage += 8;
+          bonusItems.push({ name: "2장 약수/배수 보너스", value: 8, stat: "피해" });
+          notes.push(`두 수(${a}, ${b})가 약수/배수 관계: +8`);
+          anyTwoCardBonus = true;
+        }
+
+        cards.forEach((card) => {
+          const ab = card.ability || {};
+          if (ab.onLcmAtMostDamage && pairLcm <= ab.onLcmAtMostDamage.max) {
+            bonusDamage += ab.onLcmAtMostDamage.value;
+            bonusItems.push({
+              name: `${card.name} 최소공배수 카드 보너스`,
+              value: ab.onLcmAtMostDamage.value,
+              stat: "피해"
+            });
+            notes.push(`${card.name}: 두 수의 최소공배수(${pairLcm})가 ${ab.onLcmAtMostDamage.max} 이하이므로 피해 +${ab.onLcmAtMostDamage.value}`);
+            anyTwoCardBonus = true;
+          }
+          if (ab.onLcmAtMostShield && pairLcm <= ab.onLcmAtMostShield.max) {
+            shield += ab.onLcmAtMostShield.value;
+            bonusItems.push({
+              name: `${card.name} 최소공배수 카드 보너스`,
+              value: ab.onLcmAtMostShield.value,
+              stat: "보호막"
+            });
+            notes.push(`${card.name}: 두 수의 최소공배수(${pairLcm})가 ${ab.onLcmAtMostShield.max} 이하이므로 보호막 +${ab.onLcmAtMostShield.value}`);
+            anyTwoCardBonus = true;
+          }
+        });
+
+        if (!anyTwoCardBonus) {
+          notes.push("2장 조합 불성립: 보너스 없이 공격력 합만 적용");
+        }
+        hasValidBonus = anyTwoCardBonus;
+      } else if (count === 3) {
+        const [a, b, c] = nums;
+        const triples = [
+          [a, b, c],
+          [b, a, c],
+          [c, a, b]
+        ];
+
+        let gcdOrLcmLink = false;
+        triples.forEach(([x, y, z]) => {
+          if (x === gcd(y, z) || x === lcm(y, z)) {
+            gcdOrLcmLink = true;
+          }
+        });
+        if (gcdOrLcmLink) {
+          bonusDamage += 10;
+          bonusItems.push({ name: "3장 최대공약수/최소공배수 연결 보너스", value: 10, stat: "피해" });
+          notes.push("세 수 중 하나가 나머지 두 수의 최대공약수 또는 최소공배수: +10");
+        }
+
+        const commonDivisor = gcd3(a, b, c);
+        if (commonDivisor > 1) {
+          const commonBonus = 6 + Math.min(commonDivisor, 6);
+          bonusDamage += commonBonus;
+          bonusItems.push({ name: "3장 공통 배수 보너스", value: commonBonus, stat: "피해" });
+          notes.push(`세 수가 모두 ${commonDivisor}의 배수: +${commonBonus}`);
+        }
+
+        let twoDivisorsOneTarget = false;
+        triples.forEach(([target, d1, d2]) => {
+          if (target % d1 === 0 && target % d2 === 0) {
+            twoDivisorsOneTarget = true;
+          }
+        });
+        if (twoDivisorsOneTarget) {
+          bonusDamage += 10;
+          bonusItems.push({ name: "3장 이중 약수 보너스", value: 10, stat: "피해" });
+          notes.push("두 수가 나머지 하나의 약수 관계: +10");
+        }
+
+        if (bonusDamage === 0) {
+          notes.push("3장 조합 불성립: 보너스 없이 공격력 합만 적용");
+        }
+        hasValidBonus = bonusDamage > 0;
+      }
+
+      return {
+        damage: baseDamage + bonusDamage,
+        shield,
+        heal: 0,
+        shieldBreak: 0,
+        notes,
+        breakdown: {
+          count,
+          numbers: nums,
+          baseDamage,
+          bonusDamage,
+          bonusItems,
+          hasValidBonus
+        }
+      };
+    }
+
+    function canCompleteToValidThree(twoCards) {
+      const selectedIds = new Set(twoCards.map((c) => c.uid));
+      const candidates = state.player.hand.filter((card) => !selectedIds.has(card.uid));
+      for (let i = 0; i < candidates.length; i += 1) {
+        const test = evaluatePlayerSelection([...twoCards, candidates[i]]);
+        if (test.breakdown.hasValidBonus) return true;
+      }
+      return false;
+    }
+
+    function tutorialVillainIntentByTurn(turn) {
+      if (turn === 1) return { type: "guard", value: 6 };
+      if (turn === 2) return { type: "attack", value: 8 };
+      if (turn === 3) return { type: "hex", value: 2 };
+      return { type: "attack", value: 7 };
+    }
+
+    function addLog(text, tags = []) {
+      const div = document.createElement("div");
+      div.className = "entry";
+      const tagHtml = tags.map((tag) => `<span class="tag">${tag}</span>`).join("");
+      div.innerHTML = `${tagHtml}${text}`;
+      logBoxEl.prepend(div);
+    }
+
+    function updateBgmButtonLabel() {
+      if (!bgmToggleBtnEl) return;
+      bgmToggleBtnEl.textContent = bgmAudio.paused ? "배경음악 재생" : "배경음악 일시정지";
+    }
+
+    async function playBgm() {
+      try {
+        await bgmAudio.play();
+        bgmManuallyPaused = false;
+      } catch (_err) {
+        // 자동재생 제한 시, 사용자의 상호작용으로 재시도한다.
+      }
+      updateBgmButtonLabel();
+    }
+
+    function pauseBgm() {
+      bgmAudio.pause();
+      bgmManuallyPaused = true;
+      updateBgmButtonLabel();
+    }
+
+    function hookBgmUnlock() {
+      if (bgmUnlockHooked) return;
+      bgmUnlockHooked = true;
+      const unlock = async () => {
+        if (!bgmManuallyPaused && bgmAudio.paused) {
+          await playBgm();
+        }
+      };
+      window.addEventListener("pointerdown", unlock, { once: true });
+      window.addEventListener("keydown", unlock, { once: true });
+    }
+
+    function sleep(ms) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    function pulseClass(el, className, duration = 380) {
+      if (!el) return;
+      el.classList.remove(className);
+      void el.offsetWidth;
+      el.classList.add(className);
+      setTimeout(() => {
+        el.classList.remove(className);
+      }, duration);
+    }
+
+    function spawnDamagePop(el, text, type = "dmg") {
+      if (!el) return;
+      const node = document.createElement("div");
+      node.className = `damage-pop ${type}`;
+      node.textContent = text;
+      el.appendChild(node);
+      setTimeout(() => {
+        node.remove();
+      }, 1250);
+    }
+
+    async function animatePlayerAttack(hitDamage, playedCards) {
+      playedCards.forEach((card, idx) => {
+        const el = handCardsEl.querySelector(`.card[data-uid="${card.uid}"]`);
+        if (el) {
+          setTimeout(() => {
+            pulseClass(el, "card-lunge-player", 720);
+          }, idx * 70);
+        }
+      });
+      pulseClass(villainAreaEl, "impact-villain");
+      pulseClass(villainAreaEl, "impact-swing");
+      if (hitDamage > 0) {
+        spawnDamagePop(villainAreaEl, `-${hitDamage}`, "dmg");
+      }
+      await sleep(920);
+    }
+
+    async function animateVillainAttack(actualDamage, blocked) {
+      const villainPortraitEl = document.getElementById("villainPortrait");
+      pulseClass(villainPortraitEl, "card-lunge-villain", 720);
+      pulseClass(playerHpPanelEl, "impact-player");
+      pulseClass(playerHpPanelEl, "impact-swing");
+      if (actualDamage > 0) {
+        spawnDamagePop(playerHpPanelEl, `-${actualDamage}`, "dmg");
+      }
+      if (blocked > 0) {
+        spawnDamagePop(playerHpPanelEl, `막음 ${blocked}`, "block");
+      }
+      await sleep(920);
+    }
+
+    function removeCardsFromHand(cards) {
+      cards.forEach((card) => {
+        const idx = state.player.hand.findIndex((item) => item.uid === card.uid);
+        if (idx >= 0) {
+          const used = state.player.hand.splice(idx, 1)[0];
+          state.player.discard.push(used);
+        }
+      });
+    }
+
+    function getStatusText() {
+      const s = state.player.status;
+      const parts = [];
+      if (s.weaken > 0) parts.push(`약화 ${s.weaken}턴`);
+      if (s.frail > 0) parts.push(`취약 ${s.frail}턴`);
+      if (s.bleed > 0) parts.push(`출혈 ${s.bleed}턴`);
+      return parts.length ? `플레이어 상태: ${parts.join(" / ")}` : "플레이어 상태: 정상";
+    }
+
+    function rollMapChoices() {
+      const names = ["잊힌 숲길", "붉은 협곡", "안개 성채", "마력 균열", "하늘 회랑"];
+      const types = ["aggressive", "defensive", "hexer"];
+      const choices = [];
+      for (let i = 0; i < 3; i += 1) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        const routeName = names[Math.floor(Math.random() * names.length)];
+        const boon = Math.random() < 0.5 ? "입장 시 HP +4" : "입장 시 카드 1장 드로우";
+        choices.push({
+          id: `${routeName}_${i}`,
+          title: routeName,
+          type,
+          boon
+        });
+      }
+      return choices;
+    }
+
+    function buildVillain(pathType) {
+      const base = VILLAIN_POOL[Math.floor(Math.random() * VILLAIN_POOL.length)];
+      const hpBase = 42 + state.stage * 9;
+      const hpBonus = pathType === "defensive" ? 16 : pathType === "aggressive" ? 6 : 10;
+      const villain = {
+        name: base.name,
+        desc: base.desc,
+        style: pathType === "hexer" ? "hexer" : pathType === "defensive" ? "defensive" : "aggressive",
+        maxHp: hpBase + hpBonus,
+        hp: hpBase + hpBonus,
+        shield: 0,
+        intent: null
+      };
+      villain.intent = rollVillainIntent(villain);
+      return villain;
+    }
+
+    function weightedPick(entries) {
+      const total = entries.reduce((sum, item) => sum + item.weight, 0);
+      let roll = Math.random() * total;
+      for (let i = 0; i < entries.length; i += 1) {
+        roll -= entries[i].weight;
+        if (roll <= 0) return entries[i].type;
+      }
+      return entries[entries.length - 1].type;
+    }
+
+    function rollVillainIntent(villain) {
+      let picked;
+      if (villain.style === "aggressive") {
+        picked = weightedPick([{ type: "attack", weight: 55 }, { type: "guard", weight: 20 }, { type: "hex", weight: 25 }]);
+      } else if (villain.style === "defensive") {
+        picked = weightedPick([{ type: "attack", weight: 30 }, { type: "guard", weight: 45 }, { type: "hex", weight: 25 }]);
+      } else {
+        picked = weightedPick([{ type: "attack", weight: 25 }, { type: "guard", weight: 25 }, { type: "hex", weight: 50 }]);
+      }
+
+      if (state.tutorial.active) {
+        return tutorialVillainIntentByTurn(state.tutorial.turn);
+      }
+
+      const scale = 2 + Math.floor(state.stage / 2);
+      if (picked === "attack") {
+        return { type: "attack", value: 8 + scale * 2 };
+      }
+      if (picked === "guard") {
+        return { type: "guard", value: 7 + scale * 2 };
+      }
+      return { type: "hex", value: 2 + Math.floor(scale / 2) };
+    }
+
+    function intentText(intent) {
+      if (!intent) return "-";
+      if (intent.type === "attack") return `예고: 공격 ${intent.value}`;
+      if (intent.type === "guard") return `예고: 방어력 +${intent.value}`;
+      return "예고: 저주 부여(약화/취약/출혈)";
+    }
+
+    function applyMapBoon(boonText) {
+      if (boonText.includes("HP +4")) {
+        state.player.hp = Math.min(state.player.maxHp, state.player.hp + 4);
+      } else {
+        draw(state.player, 1);
+      }
+      addLog(`길 보너스 적용: ${boonText}`, ["월드맵"]);
+    }
+
+    function choosePath(choice) {
+      if (state.mode !== "map" || state.runOver) return;
+      state.node += 1;
+      applyMapBoon(choice.boon);
+      state.villain = buildVillain(choice.type);
+      state.mode = "battle";
+      state.selected = [];
+      if (state.player.pendingStageStartDraw > 0) {
+        const bonusDraw = state.player.pendingStageStartDraw;
+        draw(state.player, bonusDraw);
+        state.player.pendingStageStartDraw = 0;
+        addLog(`스테이지 시작 보너스: 카드 ${bonusDraw}장 추가 드로우`, ["보상"]);
+      }
+      addLog(`스테이지 ${state.stage} 전투 시작: ${state.villain.name}`, ["전투"]);
+      addLog(intentText(state.villain.intent), ["빌런"]);
+      renderAll();
+    }
+
+    function applyPlayerBleedStartTurn() {
+      if (state.player.status.bleed > 0) {
+        const bleedDmg = 2;
+        state.player.hp -= bleedDmg;
+        state.player.status.bleed -= 1;
+        addLog(`출혈로 ${bleedDmg} 피해`, ["디버프"]);
+      }
+    }
+
+    function applyVillainIntent(playerTurnShield) {
+      const v = state.villain;
+      const intent = v.intent;
+      if (!intent) return;
+      let actionResult = null;
+
+      if (intent.type === "attack") {
+        let incoming = intent.value;
+        const blocked = Math.min(playerTurnShield, incoming);
+        incoming -= blocked;
+        state.player.hp -= incoming;
+        addLog(`빌런 공격 ${intent.value} (보호막 ${blocked} 방어, 실제 ${incoming})`, ["빌런"]);
+        actionResult = { type: "attack", blocked, actualDamage: incoming };
+      } else if (intent.type === "guard") {
+        v.shield += intent.value;
+        addLog(`빌런이 방어력 +${intent.value} 획득`, ["빌런"]);
+        actionResult = { type: "guard", value: intent.value };
+      } else {
+        const roll = Math.random();
+        if (roll < 0.34) {
+          state.player.status.weaken += 2;
+          addLog("빌런 저주: 약화 2턴 (공격 25% 감소)", ["디버프"]);
+        } else if (roll < 0.68) {
+          state.player.status.frail += 2;
+          addLog("빌런 저주: 취약 2턴 (보호막 35% 감소)", ["디버프"]);
+        } else {
+          state.player.status.bleed += 3;
+          addLog("빌런 저주: 출혈 3턴", ["디버프"]);
+        }
+        actionResult = { type: "hex" };
+      }
+
+      if (state.tutorial.active) {
+        state.tutorial.turn += 1;
+      }
+      v.intent = rollVillainIntent(v);
+      addLog(intentText(v.intent), ["빌런"]);
+      return actionResult;
+    }
+
+    async function doTurn() {
+      if (state.mode !== "battle" || state.runOver || state.turnLocked) return;
+      if (state.selected.length < 1 || state.selected.length > 3) {
+        addLog("카드를 1장 이상 3장 이하로 선택해야 합니다.", ["알림"]);
+        return;
+      }
+
+      applyPlayerBleedStartTurn();
+      if (state.player.hp <= 0) {
+        finishRun();
+        return;
+      }
+
+      const playedCards = [...state.selected];
+      const result = evaluatePlayerSelection(playedCards);
+      if (playedCards.length > 1 && !result.breakdown.hasValidBonus) {
+        addLog("보너스가 성립하지 않아 2장/3장 공격은 사용할 수 없습니다. 1장만 선택하세요.", ["알림"]);
+        return;
+      }
+      state.turnLocked = true;
+      updateTop();
+
+      try {
+        let playerDamage = result.damage;
+        if (state.player.status.weaken > 0) {
+          playerDamage = Math.floor(playerDamage * 0.75);
+          addLog("약화 상태로 플레이어 피해 25% 감소", ["디버프"]);
+        }
+
+        let playerTurnShield = result.shield;
+        if (state.player.status.frail > 0) {
+          playerTurnShield = Math.floor(playerTurnShield * 0.65);
+          addLog("취약 상태로 보호막 35% 감소", ["디버프"]);
+        }
+
+        state.villain.shield = Math.max(0, state.villain.shield - result.shieldBreak);
+        let remainingDamage = playerDamage;
+        const shieldBlocked = Math.min(state.villain.shield, remainingDamage);
+        remainingDamage -= shieldBlocked;
+        state.villain.shield -= shieldBlocked;
+        state.villain.hp -= remainingDamage;
+
+        state.player.hp = Math.min(state.player.maxHp, state.player.hp + result.heal);
+
+        addLog(`플레이어 선공: [${playedCards.map((c) => c.number).join(", ")}]`, ["턴", `S${state.stage}`]);
+        const bonusSummary = result.breakdown.bonusItems.length
+          ? result.breakdown.bonusItems.map((item) => `${item.name} (${item.stat} +${item.value})`).join(" / ")
+          : "조합 보너스 없음";
+        addLog(`공격 계산식: 공격력 합 ${result.breakdown.baseDamage} + 조합 보너스 ${result.breakdown.bonusDamage} = ${result.damage}`, ["계산"]);
+        addLog(`보너스 상세: ${bonusSummary}`, ["계산"]);
+        addLog(`피해 ${playerDamage} / 보호막 ${playerTurnShield} / 회복 ${result.heal}`, ["플레이어"]);
+        addLog(`빌런 방어로 막은 피해 ${shieldBlocked}, 실제 타격 ${remainingDamage}`, ["전투"]);
+        addLog(`수학 시너지: ${result.notes.join(" | ")}`, ["수학"]);
+
+        renderAll();
+        await animatePlayerAttack(remainingDamage, playedCards);
+
+        removeCardsFromHand(playedCards);
+        state.selected = [];
+        draw(state.player, playedCards.length);
+
+        renderAll();
+
+        if (state.villain.hp <= 0) {
+          if (state.tutorial.active) {
+            state.tutorial.active = false;
+            state.stage = 1;
+            state.mode = "map";
+            state.villain = null;
+            state.currentMapChoices = rollMapChoices();
+            addLog("튜토리얼 완료! 이제 월드맵에서 길을 선택해 본 게임을 진행하세요.", ["튜토리얼"]);
+          } else {
+            addLog(`${state.villain.name} 처치 성공! 보상을 선택하세요.`, ["승리"]);
+            state.mode = "reward";
+            renderRewardChoices();
+          }
+        } else {
+          addLog("빌런 후공: 빌런 행동 실행", ["턴"]);
+          await sleep(460);
+          const villainAction = applyVillainIntent(playerTurnShield);
+          renderAll();
+          if (villainAction && villainAction.type === "attack") {
+            await animateVillainAttack(villainAction.actualDamage, villainAction.blocked);
+          }
+          if (state.player.status.weaken > 0) state.player.status.weaken -= 1;
+          if (state.player.status.frail > 0) state.player.status.frail -= 1;
+        }
+
+        if (state.player.hp <= 0) {
+          finishRun();
+        }
+      } finally {
+        state.turnLocked = false;
+        renderAll();
+      }
+    }
+
+    function rerollHand() {
+      if (state.mode !== "battle" || state.runOver) return;
+      if (state.player.hp <= 4) {
+        addLog("HP가 부족해 핸드 새로고침이 불가능합니다.", ["알림"]);
+        return;
+      }
+      state.player.hp -= 4;
+      state.player.discard.push(...state.player.hand);
+      state.player.hand = [];
+      draw(state.player, 5);
+      state.selected = [];
+      addLog("핸드 새로고침 (HP -4)", ["전략"]);
+      renderAll();
+    }
+
+    function finishRun() {
+      state.mode = "gameover";
+      state.runOver = true;
+      addLog(`게임 오버! 최종 도달 스테이지: ${state.stage}`, ["게임오버"]);
+    }
+
+    function rewardOptions() {
+      return [
+        {
+          label: "체력 회복 +14",
+          apply: () => {
+            state.player.hp = Math.min(state.player.maxHp, state.player.hp + 14);
+          }
+        },
+        {
+          label: "최대 체력 +8, 현재 체력 +8",
+          apply: () => {
+            state.player.maxHp += 8;
+            state.player.hp = Math.min(state.player.maxHp, state.player.hp + 8);
+          }
+        },
+        {
+          label: "새 카드 1장 획득",
+          apply: () => {
+            const pick = CARD_LIBRARY[Math.floor(Math.random() * CARD_LIBRARY.length)];
+            state.player.discard.push(createCardInstance(pick, state.stage));
+          }
+        },
+        {
+          label: "디버프 정화 (약화/취약/출혈 제거)",
+          apply: () => {
+            state.player.status.weaken = 0;
+            state.player.status.frail = 0;
+            state.player.status.bleed = 0;
+          }
+        },
+        {
+          label: "덱 강화: 다음 스테이지 시작 시 카드 2장 드로우",
+          apply: () => {
+            state.player.pendingStageStartDraw += 2;
+          }
+        }
+      ];
+    }
+
+    function pickReward(option) {
+      if (state.mode !== "reward") return;
+      option.apply();
+      addLog(`보상 획득: ${option.label}`, ["보상"]);
+      state.stage += 1;
+      state.mode = "map";
+      state.villain = null;
+      state.currentMapChoices = rollMapChoices();
+      rewardAreaEl.innerHTML = "";
+      renderAll();
+    }
+
+    function renderMap() {
+      if (state.tutorial.active) {
+        mapAreaEl.innerHTML = `
+          <div class="reward-box">
+            <strong>튜토리얼 스테이지</strong>
+            <div class="desc">이번 전투에서는 빌런에게 가해지는 피해 계산을 연습합니다.</div>
+            <div class="ability">
+              1) 카드 1~3장 선택<br>
+              2) 선택 장수별 조합 보너스 확인<br>
+              3) 턴 진행 후 로그에서 계산식 확인
+            </div>
+          </div>
+        `;
+        return;
+      }
+      if (state.mode !== "map") {
+        mapAreaEl.innerHTML = "";
+        return;
+      }
+      const choices = state.currentMapChoices;
+      mapAreaEl.innerHTML = `
+        <div class="reward-box">
+          <strong>월드맵 길 선택 (스테이지 ${state.stage})</strong>
+          <div class="map-grid" id="mapGrid"></div>
+        </div>
+      `;
+      const grid = document.getElementById("mapGrid");
+      choices.forEach((choice) => {
+        const item = document.createElement("div");
+        item.className = "map-node";
+        item.innerHTML = `
+          <div class="name">${choice.title}</div>
+          <div class="desc">적 성향: ${choice.type}</div>
+          <div class="ability">입장 보너스: ${choice.boon}</div>
+          <button style="margin-top:8px;">이 길 선택</button>
+        `;
+        item.querySelector("button").addEventListener("click", () => choosePath(choice));
+        grid.appendChild(item);
+      });
+    }
+
+    function renderVillain() {
+      if (!state.villain || state.mode === "map") {
+        villainAreaEl.innerHTML = "";
+        return;
+      }
+      const villainImage = getVillainImagePath(state.villain);
+      villainAreaEl.innerHTML = `
+        <div class="villain-box">
+          <div class="img-placeholder" id="villainPortrait">
+            ${villainImage
+              ? `<img src="${villainImage}" alt="${state.villain.name}">`
+              : "빌런 이미지<br>준비중"}
+          </div>
+          <div>
+            <div class="hp-panel" id="villainHpPanel">
+              <div class="hp-row">
+                <span>빌런 HP</span>
+                <strong id="villainHpText">0 / 0</strong>
+              </div>
+              <div class="hp-track">
+                <div class="hp-fill villain" id="villainHpBar"></div>
+              </div>
+            </div>
+            <div class="name">${state.villain.name}</div>
+            <div class="meta">
+              <span>방어력 ${state.villain.shield}</span>
+            </div>
+            <div class="desc">${state.villain.desc}</div>
+            <div class="intent">${intentText(state.villain.intent)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRewardChoices() {
+      if (state.mode !== "reward") {
+        rewardAreaEl.innerHTML = "";
+        return;
+      }
+      const options = shuffle(rewardOptions()).slice(0, 3);
+      const box = document.createElement("div");
+      box.className = "reward-box";
+      box.innerHTML = "<strong>승리 보상 선택</strong>";
+
+      options.forEach((option) => {
+        const btn = document.createElement("button");
+        btn.textContent = option.label;
+        btn.style.marginLeft = "6px";
+        btn.addEventListener("click", () => pickReward(option));
+        box.appendChild(btn);
+      });
+
+      rewardAreaEl.innerHTML = "";
+      rewardAreaEl.appendChild(box);
+    }
+
+    function renderHand() {
+      handCardsEl.innerHTML = "";
+      state.player.hand.forEach((card) => {
+        const cardEl = document.createElement("article");
+        cardEl.className = "card";
+        cardEl.dataset.uid = card.uid;
+        const cardImage = getCardImagePath(card);
+        if (state.selected.some((sel) => sel.uid === card.uid)) {
+          cardEl.classList.add("selected");
+        }
+        cardEl.innerHTML = `
+          <div class="img-placeholder">
+            ${cardImage
+              ? `<img src="${cardImage}" alt="${card.name}">`
+              : "이미지 준비중"}
+          </div>
+          <div>
+            <div class="name">${card.name}</div>
+            <div class="meta">
+              <span>숫자 ${card.number}</span>
+              <span>공격력 ${cardAttackPower(card)}</span>
+            </div>
+            <div class="desc">${card.desc}</div>
+            <div class="ability">특수: ${card.abilityText}</div>
+          </div>
+        `;
+        cardEl.addEventListener("click", () => {
+          if (state.mode !== "battle") return;
+          const exists = state.selected.find((sel) => sel.uid === card.uid);
+          if (exists) {
+            state.selected = state.selected.filter((sel) => sel.uid !== card.uid);
+          } else if (state.selected.length < 3) {
+            const nextSelected = [...state.selected, card];
+            if (nextSelected.length === 1) {
+              state.selected = nextSelected;
+            } else if (nextSelected.length === 2) {
+              const twoEval = evaluatePlayerSelection(nextSelected);
+              if (twoEval.breakdown.hasValidBonus || canCompleteToValidThree(nextSelected)) {
+                state.selected = nextSelected;
+                if (!twoEval.breakdown.hasValidBonus) {
+                  addLog("현재 2장만으로는 보너스가 성립하지 않습니다. 3장 조합으로 완성해보세요.", ["안내"]);
+                }
+              } else {
+                addLog("이 2장 조합은 보너스가 성립하지 않아 선택할 수 없습니다. 1장만 내거나 다른 조합을 선택하세요.", ["알림"]);
+              }
+            } else {
+              const threeEval = evaluatePlayerSelection(nextSelected);
+              if (threeEval.breakdown.hasValidBonus) {
+                state.selected = nextSelected;
+              } else {
+                addLog("이 3장 조합은 보너스가 성립하지 않아 선택할 수 없습니다.", ["알림"]);
+              }
+            }
+          }
+          renderHand();
+          renderCalcGuide();
+        });
+        handCardsEl.appendChild(cardEl);
+      });
+    }
+
+    function renderCalcGuide() {
+      if (state.mode !== "battle" || state.selected.length < 1) {
+        calcAreaEl.innerHTML = "카드 1~3장을 선택하면 이번 턴 예상 공격 계산이 표시됩니다.";
+        return;
+      }
+      const selectedCards = [...state.selected];
+      const result = evaluatePlayerSelection(selectedCards);
+      const bonusLines = result.breakdown.bonusItems.length
+        ? result.breakdown.bonusItems.map((item) => `${item.name}: ${item.stat} +${item.value}`).join("<br>")
+        : "조합 보너스 없음";
+      const validityText = selectedCards.length > 1 && !result.breakdown.hasValidBonus
+        ? "<span style='color:#ff9fbf'>현재 조합은 보너스 미성립: 1장만 낼 수 있습니다.</span><br>"
+        : "";
+      calcAreaEl.innerHTML = `
+        <strong>이번 턴 예상 공격 계산</strong><br>
+        선택 카드(${result.breakdown.count}장): ${result.breakdown.numbers.join(", ")}<br>
+        공격력 합 = ${result.breakdown.baseDamage}<br>
+        조합 보너스 합 = ${result.breakdown.bonusDamage}<br>
+        예상 보호막 = ${result.shield}<br>
+        ${validityText}
+        ${bonusLines}<br>
+        <strong>합계 예상 피해 = ${result.damage}</strong>
+      `;
+    }
+
+    function toggleDeckModal(forceOpen) {
+      const nextOpen = typeof forceOpen === "boolean" ? forceOpen : !state.deckView.open;
+      state.deckView.open = nextOpen;
+      renderDeckModal();
+    }
+
+    function updateTop() {
+      stageTextEl.textContent = state.tutorial.active ? "튜토리얼" : state.stage;
+      nodeTextEl.textContent = state.node;
+      playerHpTextEl.textContent = `${Math.max(0, state.player.hp)} / ${state.player.maxHp}`;
+      const playerHpPct = Math.max(0, Math.min(100, (state.player.hp / state.player.maxHp) * 100));
+      playerHpBarEl.style.width = `${playerHpPct}%`;
+
+      const villainHpTextEl = document.getElementById("villainHpText");
+      const villainHpBarEl = document.getElementById("villainHpBar");
+      if (villainHpTextEl && villainHpBarEl) {
+        if (state.villain) {
+          villainHpTextEl.textContent = `${Math.max(0, state.villain.hp)} / ${state.villain.maxHp}`;
+          const villainHpPct = Math.max(0, Math.min(100, (state.villain.hp / state.villain.maxHp) * 100));
+          villainHpBarEl.style.width = `${villainHpPct}%`;
+        } else {
+          villainHpTextEl.textContent = "- / -";
+          villainHpBarEl.style.width = "0%";
+        }
+      }
+      statusLineEl.textContent = getStatusText();
+      if (deckStatusEl) {
+        deckStatusEl.textContent = `덱 남음 ${state.player.deck.length}장 | 사용 더미 ${state.player.discard.length}장 | 손패 ${state.player.hand.length}장`;
+      }
+      const inBattle = state.mode === "battle" && !state.runOver && !state.turnLocked;
+      playBtnEl.disabled = !inBattle;
+      rerollBtnEl.disabled = !inBattle;
+    }
+
+    function renderAll() {
+      renderMap();
+      renderVillain();
+      if (state.mode !== "reward") rewardAreaEl.innerHTML = "";
+      renderHand();
+      renderCalcGuide();
+      updateTop();
+      renderDeckModal();
+    }
+
+    function setupTutorialBattle() {
+      const tutorialVillain = {
+        name: "훈련용 빌런 골렘",
+        desc: "전투 계산을 학습하기 위한 연습 상대.",
+        style: "tutorial",
+        maxHp: 36,
+        hp: 36,
+        shield: 0,
+        intent: tutorialVillainIntentByTurn(1)
+      };
+      state.mode = "battle";
+      state.villain = tutorialVillain;
+      state.stage = 1;
+      state.node = 0;
+      state.tutorial.active = true;
+      state.tutorial.turn = 1;
+      state.selected = [];
+
+      addLog("튜토리얼 시작: 시작 덱(12장)에서 받은 손패(5장)로 조합 보너스를 확인하세요.", ["튜토리얼"]);
+      addLog(intentText(state.villain.intent), ["빌런"]);
+    }
+
+    function newRun() {
+      state.stage = 1;
+      state.node = 0;
+      state.mode = "battle";
+      state.selected = [];
+      state.currentMapChoices = rollMapChoices();
+      state.runOver = false;
+      state.villain = null;
+
+      state.player.hp = 72;
+      state.player.maxHp = 72;
+      state.player.deck = createDeck(12, 1);
+      state.player.discard = [];
+      state.player.hand = [];
+      state.player.pendingStageStartDraw = 0;
+      state.player.status = { weaken: 0, frail: 0, bleed: 0 };
+      state.deckView.open = false;
+      state.deckView.sortMode = "number_desc";
+      draw(state.player, 5);
+
+      logBoxEl.innerHTML = "";
+      addLog("새로운 원정 시작!", ["시작"]);
+      setupTutorialBattle();
+      renderAll();
+    }
+
+    playBtnEl.addEventListener("click", doTurn);
+    rerollBtnEl.addEventListener("click", rerollHand);
+    newRunBtnEl.addEventListener("click", newRun);
+    deckViewBtnEl.addEventListener("click", () => toggleDeckModal(true));
+    closeDeckModalBtnEl.addEventListener("click", () => toggleDeckModal(false));
+    deckModalEl.addEventListener("click", (event) => {
+      if (event.target === deckModalEl) {
+        toggleDeckModal(false);
+      }
+    });
+    deckSortSelectEl.addEventListener("change", () => {
+      state.deckView.sortMode = deckSortSelectEl.value;
+      renderDeckModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && state.deckView.open) {
+        toggleDeckModal(false);
+      }
+      if ((event.key === "d" || event.key === "D") && !event.ctrlKey && !event.metaKey) {
+        const targetTag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
+        if (targetTag !== "input" && targetTag !== "textarea" && targetTag !== "select") {
+          toggleDeckModal();
+        }
+      }
+    });
+    bgmToggleBtnEl.addEventListener("click", async () => {
+      if (bgmAudio.paused) {
+        await playBgm();
+      } else {
+        pauseBgm();
+      }
+    });
+    bgmVolumeRangeEl.addEventListener("input", () => {
+      const volume = Number(bgmVolumeRangeEl.value) / 100;
+      bgmAudio.volume = Math.max(0, Math.min(1, volume));
+      updateBgmButtonLabel();
+    });
+
+    newRun();
+    hookBgmUnlock();
+    playBgm();
+  </script>
+</body>
+</html>
