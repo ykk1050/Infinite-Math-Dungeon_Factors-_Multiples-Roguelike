@@ -510,6 +510,101 @@
       display: flex;
     }
 
+    /* 게임오버 오버레이 */
+    .gameover-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 15, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      backdrop-filter: blur(6px);
+      animation: goFadeIn 0.4s ease;
+    }
+
+    @keyframes goFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .gameover-modal {
+      background: linear-gradient(160deg, #1a0a0a 0%, #2a0c0c 60%, #180a1a 100%);
+      border: 2px solid rgba(220, 50, 50, 0.55);
+      border-radius: 18px;
+      padding: 44px 52px 40px;
+      text-align: center;
+      max-width: 420px;
+      width: 90vw;
+      box-shadow: 0 0 60px rgba(200, 20, 20, 0.35), 0 20px 50px rgba(0,0,0,0.7);
+      animation: goPopIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes goPopIn {
+      from { opacity: 0; transform: scale(0.75) translateY(30px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .gameover-skull {
+      font-size: 3.6rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 16px rgba(200,50,50,0.8));
+      animation: goSkullPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes goSkullPulse {
+      0%, 100% { transform: scale(1);   filter: drop-shadow(0 0 16px rgba(200,50,50,0.8)); }
+      50%       { transform: scale(1.08); filter: drop-shadow(0 0 28px rgba(255,80,80,1)); }
+    }
+
+    .gameover-title {
+      font-size: 2.4rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: #ff4444;
+      margin: 14px 0 8px;
+      text-shadow: 0 0 20px rgba(255,60,60,0.7);
+    }
+
+    .gameover-stage {
+      font-size: 1.05rem;
+      color: #e8c8a0;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .gameover-msg {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .gameover-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .gameover-btn-main {
+      background: linear-gradient(90deg, #c0392b, #e74c3c);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 13px 0;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: filter 0.15s, transform 0.1s;
+      box-shadow: 0 4px 18px rgba(220,50,50,0.45);
+    }
+
+    .gameover-btn-main:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+    }
+
     .deck-modal-content {
       width: min(980px, 95vw);
       max-height: 88vh;
@@ -911,7 +1006,7 @@
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00012</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00013</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -957,6 +1052,19 @@
       <div class="small">덱에서 카드 1장을 영구히 제거하여 덱을 압축합니다.</div>
       <div id="swapCountSummary" class="deck-sort-row" style="margin-top:8px;"></div>
       <div id="swapItemList" class="swap-item-list"></div>
+    </div>
+  </div>
+
+  <!-- 게임오버 모달 -->
+  <div id="gameOverModal" class="gameover-overlay" style="display:none;">
+    <div class="gameover-modal">
+      <div class="gameover-skull">💀</div>
+      <h2 class="gameover-title">GAME OVER</h2>
+      <div id="gameOverStage" class="gameover-stage"></div>
+      <div id="gameOverMsg" class="gameover-msg"></div>
+      <div class="gameover-buttons">
+        <button id="gameOverNewRunBtn" class="gameover-btn-main">새 게임 시작</button>
+      </div>
     </div>
   </div>
 
@@ -1230,6 +1338,7 @@
         hand: [],
         status: { weaken: 0, frail: 0, bleed: 0 }
       },
+      pendingExtraDraw: 0,
       deckView: { open: false, sortMode: "number_desc" },
       swapView: { open: false },
       villain: null,
@@ -1719,11 +1828,11 @@
             state.villain.stunned = true;
             addLog("⚡ 번개 속성 효과: 적 추가 기절 1턴!", ["속성"]);
           } else if (card.effect === "extraDraw") {
-            drawCards(1);
-            addLog("🌿 바람 속성 효과: 카드 1장 추가 드로우", ["속성"]);
+            state.pendingExtraDraw += 1;
+            addLog("🌿 바람 속성 효과: 다음 턴 카드 1장 추가 드로우 예약", ["속성"]);
           } else if (card.effect === "extraDraw2") {
-            drawCards(2);
-            addLog("🌿 바람 속성 효과: 카드 2장 추가 드로우", ["속성"]);
+            state.pendingExtraDraw += 2;
+            addLog("🌿 바람 속성 효과: 다음 턴 카드 2장 추가 드로우 예약", ["속성"]);
           }
         }
         // ──────────────────────────────────────────────────────
@@ -1735,6 +1844,11 @@
         discardHand();
         state.selectedCard = null;
         drawCards(5);
+        if (state.pendingExtraDraw > 0) {
+          drawCards(state.pendingExtraDraw);
+          addLog(`🌿 바람 속성 보너스: 카드 ${state.pendingExtraDraw}장 추가 드로우!`, ["속성"]);
+          state.pendingExtraDraw = 0;
+        }
 
         if (state.villain.hp <= 0) {
           if (state.tutorial.active) {
@@ -1803,8 +1917,25 @@
     function finishRun() {
       state.mode = "gameover";
       state.runOver = true;
+      localStorage.removeItem(SAVE_KEY);
       addLog(`게임 오버! 최종 도달 스테이지: ${state.stage}`, ["게임오버"]);
       renderAll();
+      showGameOverModal();
+    }
+
+    function showGameOverModal() {
+      const overlay = document.getElementById("gameOverModal");
+      const stageEl = document.getElementById("gameOverStage");
+      const msgEl = document.getElementById("gameOverMsg");
+      if (!overlay) return;
+      stageEl.textContent = `도달 스테이지: ${state.stage} 스테이지`;
+      msgEl.textContent = "수학적 관계를 잊지 마세요. 약수, 배수, 공약수, 공배수로 더 강한 공격을 할 수 있습니다.";
+      overlay.style.display = "flex";
+    }
+
+    function hideGameOverModal() {
+      const overlay = document.getElementById("gameOverModal");
+      if (overlay) overlay.style.display = "none";
     }
 
     // ============================================================
@@ -2308,7 +2439,8 @@
       statusLineEl.textContent = parts.length ? `상태: ${parts.join(" / ")}` : "상태: 정상";
 
       if (deckStatusEl) {
-        deckStatusEl.textContent = `덱 ${state.player.deck.length}장 | 버린 더미 ${state.player.discard.length}장 | 손패 ${state.player.hand.length}장 | 방어막 ${state.player.shield}`;
+        const extraDrawNote = state.pendingExtraDraw > 0 ? ` | 🌿 다음 턴 +${state.pendingExtraDraw}장` : "";
+        deckStatusEl.textContent = `덱 ${state.player.deck.length}장 | 버린 더미 ${state.player.discard.length}장 | 손패 ${state.player.hand.length}장 | 방어막 ${state.player.shield}${extraDrawNote}`;
       }
 
       const inBattle = state.mode === "battle" && !state.runOver && !state.turnLocked;
@@ -2325,6 +2457,7 @@
       updateTop();
       renderDeckModal();
       renderSwapModal();
+      saveGame();
     }
 
     // ============================================================
@@ -2358,6 +2491,7 @@
     }
 
     function newRun() {
+      localStorage.removeItem(SAVE_KEY);
       state.stage = 1;
       state.node = 0;
       state.mode = "battle";
@@ -2373,6 +2507,7 @@
       state.player.discard = [];
       state.player.hand = [];
       state.player.status = { weaken: 0, frail: 0, bleed: 0 };
+      state.pendingExtraDraw = 0;
       state.deckView.open = false;
       state.deckView.sortMode = "number_desc";
       state.swapView.open = false;
@@ -2386,11 +2521,69 @@
     }
 
     // ============================================================
+    //  세이브 / 로드 (localStorage)
+    // ============================================================
+    const SAVE_KEY = "dmcg_save_v1";
+
+    function saveGame() {
+      if (state.runOver) {
+        // 게임오버 상태는 저장하지 않음 (다음 실행 시 새 게임 시작)
+        localStorage.removeItem(SAVE_KEY);
+        return;
+      }
+      try {
+        const snapshot = {
+          stage: state.stage,
+          node: state.node,
+          mode: state.mode,
+          currentMapChoices: state.currentMapChoices,
+          tutorial: JSON.parse(JSON.stringify(state.tutorial)),
+          player: JSON.parse(JSON.stringify(state.player)),
+          villain: state.villain ? JSON.parse(JSON.stringify(state.villain)) : null,
+          pendingExtraDraw: state.pendingExtraDraw,
+          selectedCard: null, // 선택 상태는 저장하지 않음
+          runOver: false
+        };
+        localStorage.setItem(SAVE_KEY, JSON.stringify(snapshot));
+      } catch(e) { /* 저장 실패 시 무시 */ }
+    }
+
+    function loadGame() {
+      try {
+        const raw = localStorage.getItem(SAVE_KEY);
+        if (!raw) return false;
+        const snap = JSON.parse(raw);
+        if (!snap || !snap.player) return false;
+        state.stage = snap.stage ?? 1;
+        state.node = snap.node ?? 0;
+        state.mode = snap.mode ?? "map";
+        state.currentMapChoices = snap.currentMapChoices ?? [];
+        state.tutorial = snap.tutorial ?? { active: false, turn: 1 };
+        state.player.hp = snap.player.hp;
+        state.player.maxHp = snap.player.maxHp;
+        state.player.shield = snap.player.shield ?? 0;
+        state.player.deck = snap.player.deck ?? [];
+        state.player.discard = snap.player.discard ?? [];
+        state.player.hand = snap.player.hand ?? [];
+        state.player.status = snap.player.status ?? { weaken: 0, frail: 0, bleed: 0 };
+        state.villain = snap.villain ?? null;
+        state.selectedCard = null;
+        state.pendingExtraDraw = snap.pendingExtraDraw ?? 0;
+        state.runOver = false;
+        return true;
+      } catch(e) { return false; }
+    }
+
+    // ============================================================
     //  이벤트 바인딩
     // ============================================================
     playBtnEl.addEventListener("click", doTurn);
     rerollBtnEl.addEventListener("click", rerollHand);
     newRunBtnEl.addEventListener("click", newRun);
+    document.getElementById("gameOverNewRunBtn").addEventListener("click", () => {
+      hideGameOverModal();
+      newRun();
+    });
     deckViewBtnEl.addEventListener("click", () => toggleDeckModal(true));
     closeDeckModalBtnEl.addEventListener("click", () => toggleDeckModal(false));
     closeSwapModalBtnEl.addEventListener("click", () => {
@@ -2422,7 +2615,12 @@
     // ============================================================
     //  초기 실행
     // ============================================================
-    newRun();
+    if (loadGame()) {
+      addLog("이전 진행 상황을 불러왔습니다.", ["세이브"]);
+      renderAll();
+    } else {
+      newRun();
+    }
     hookBgmUnlock();
     playBgm();
   </script>
