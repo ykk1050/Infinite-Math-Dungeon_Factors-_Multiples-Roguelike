@@ -16,6 +16,7 @@
       --good: #96f29b;
       --warn: #ffd27d;
       --border: #3d4272;
+      --critical: #ffe066;
     }
 
     * { box-sizing: border-box; }
@@ -88,7 +89,7 @@
     .card {
       border: 1px solid var(--border);
       border-radius: 12px;
-      background: linear-gradient(180deg, var(--panel), #1b1d33);
+      background: linear-gradient(180deg, #b88a4a, #8f6732);
       padding: 10px;
       cursor: pointer;
       transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
@@ -96,6 +97,7 @@
       display: grid;
       grid-template-rows: 128px auto;
       gap: 8px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.26);
     }
 
     .card:hover {
@@ -164,6 +166,14 @@
       flex-wrap: wrap;
     }
 
+    #handCards .card .meta {
+      color: #000;
+    }
+
+    #handCards .card .meta .hand-stat-num {
+      font-weight: 800;
+    }
+
     .desc {
       font-size: 0.82rem;
       line-height: 1.35;
@@ -186,6 +196,39 @@
       padding: 7px 9px;
       font-size: 0.85rem;
       color: #ffe6ee;
+    }
+
+    .target-numbers {
+      margin-top: 8px;
+      border: 2px solid rgba(255, 224, 102, 0.5);
+      border-radius: 10px;
+      padding: 9px 11px;
+      background: rgba(255, 224, 102, 0.08);
+    }
+
+    .target-numbers .label {
+      font-size: 0.78rem;
+      color: var(--warn);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .target-numbers .nums {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .target-num {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--critical);
+      background: rgba(255, 224, 102, 0.12);
+      border: 1px solid rgba(255, 224, 102, 0.4);
+      border-radius: 8px;
+      padding: 4px 14px;
+      min-width: 48px;
+      text-align: center;
     }
 
     .btn-row {
@@ -276,12 +319,65 @@
       color: #d4d8ff;
     }
 
+    .tag.critical {
+      border-color: rgba(255, 224, 102, 0.6);
+      background: rgba(255, 224, 102, 0.2);
+      color: var(--critical);
+      font-weight: 700;
+    }
+
+    .tag.enhanced {
+      border-color: rgba(125, 249, 255, 0.5);
+      background: rgba(125, 249, 255, 0.15);
+      color: var(--accent);
+    }
+
+    .tag.miss {
+      border-color: rgba(166, 172, 216, 0.4);
+      background: rgba(166, 172, 216, 0.1);
+      color: var(--muted);
+    }
+
     .reward-box {
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 10px;
       padding: 9px;
       margin-top: 10px;
       background: rgba(150, 242, 155, 0.08);
+    }
+
+    .reward-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .reward-card {
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      padding: 10px;
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      text-align: center;
+    }
+
+    .reward-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px rgba(125, 249, 255, 0.2);
+    }
+
+    .reward-card .number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .reward-card .card-name {
+      font-size: 0.82rem;
+      margin-top: 4px;
+      color: var(--muted);
     }
 
     .small {
@@ -388,6 +484,33 @@
       gap: 8px;
     }
 
+    .swap-item-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .swap-item {
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      border-radius: 9px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+
+    .swap-item small {
+      color: var(--muted);
+      font-size: 0.74rem;
+      display: block;
+      margin-top: 2px;
+    }
+
     .footer-credit {
       text-align: center;
       color: rgba(244, 245, 255, 0.55);
@@ -435,6 +558,77 @@
       background: linear-gradient(90deg, #ff7aa2, #ffc1d5);
     }
 
+    .status-effects {
+      margin-top: 7px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .status-effects:empty {
+      display: none;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.74rem;
+      line-height: 1.2;
+      color: #eef1ff;
+      background: rgba(255,255,255,0.08);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .status-chip:focus-visible {
+      outline: 2px solid rgba(125, 249, 255, 0.75);
+      outline-offset: 1px;
+    }
+
+    .status-chip.active {
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.36);
+    }
+
+    .status-chip.weaken {
+      border-color: rgba(255, 197, 122, 0.55);
+      background: rgba(255, 197, 122, 0.18);
+    }
+
+    .status-chip.frail {
+      border-color: rgba(255, 161, 193, 0.55);
+      background: rgba(255, 161, 193, 0.18);
+    }
+
+    .status-chip.bleed {
+      border-color: rgba(255, 122, 162, 0.6);
+      background: rgba(255, 122, 162, 0.22);
+    }
+
+    .status-chip.stun {
+      border-color: rgba(255, 224, 102, 0.6);
+      background: rgba(255, 224, 102, 0.22);
+    }
+
+    .status-chip.shield-buff {
+      border-color: rgba(125, 249, 255, 0.5);
+      background: rgba(125, 249, 255, 0.15);
+    }
+
+    .status-tip {
+      width: 100%;
+      margin-top: 4px;
+      padding: 4px 7px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      color: #d7ddff;
+      font-size: 0.72rem;
+      line-height: 1.35;
+    }
+
     #villainArea {
       position: relative;
       min-height: 40px;
@@ -480,10 +674,27 @@
       color: #ffd3de;
     }
 
+    .damage-pop.crit {
+      color: var(--critical);
+      font-size: 1.25rem;
+      text-shadow: 0 0 12px rgba(255, 224, 102, 0.7);
+    }
+
     .damage-pop.block {
       color: #d1f4ff;
       top: 28px;
       font-size: 0.8rem;
+    }
+
+    .damage-pop.miss {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .damage-pop.stun-text {
+      color: var(--critical);
+      top: 48px;
+      font-size: 0.85rem;
     }
 
     @keyframes impactVillain {
@@ -523,6 +734,22 @@
       38% { transform: translate(44px, 10px) scale(1.05); }
       100% { transform: translate(0, 0) scale(1); }
     }
+
+    @keyframes critFlash {
+      0% { box-shadow: 0 0 0 0 rgba(255, 224, 102, 0); filter: brightness(1); }
+      20% { box-shadow: 0 0 30px 8px rgba(255, 224, 102, 0.6); filter: brightness(1.6); }
+      50% { box-shadow: 0 0 15px 4px rgba(255, 224, 102, 0.3); filter: brightness(1.2); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 224, 102, 0); filter: brightness(1); }
+    }
+
+    .crit-flash {
+      animation: critFlash 1.0s ease;
+    }
+
+    @keyframes stunPulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -544,7 +771,7 @@
       <div id="villainArea"></div>
       <div id="rewardArea"></div>
       <div class="btn-row">
-        <button id="playBtn">턴 진행</button>
+        <button id="playBtn">카드 사용</button>
         <button id="rerollBtn">핸드 새로고침(HP -4)</button>
         <button id="newRunBtn">새 게임</button>
         <button id="deckViewBtn">내 덱 보기</button>
@@ -556,7 +783,7 @@
     </section>
 
     <section class="panel">
-      <h3>내 핸드 (1~3장 선택 후 턴 진행)</h3>
+      <h3>내 핸드 (카드 1장 선택 후 사용)</h3>
       <div class="hp-panel" id="playerHpPanel">
         <div class="hp-row">
           <span>나 HP</span>
@@ -565,26 +792,27 @@
         <div class="hp-track">
           <div class="hp-fill player" id="playerHpBar"></div>
         </div>
+        <div id="playerStatusEffects" class="status-effects"></div>
       </div>
       <p id="deckStatus" class="deck-status"></p>
       <div id="handCards" class="cards"></div>
-      <div id="calcArea" class="calc-box">카드 1~3장을 선택하면 이번 턴 예상 공격 계산이 표시됩니다.</div>
+      <div id="calcArea" class="calc-box">카드를 선택하면 타겟 숫자와의 수학적 관계 분석이 표시됩니다.</div>
       <hr style="border-color: rgba(255,255,255,0.15); margin: 12px 0;">
       <h3>게임 규칙</h3>
       <ul class="rule-list">
-        <li>첫 시작은 튜토리얼 스테이지이며 데미지 계산 과정을 단계별로 배웁니다.</li>
-        <li>월드맵에서 길(노드)을 선택해 각 스테이지 전투로 진입합니다.</li>
-        <li>카드를 1~3장 선택해 공격합니다. 1장은 공격력만, 2장/3장은 조건 성립 시 조합 보너스를 얻습니다.</li>
-        <li>3장 조합은 최대공약수/최소공배수 연결, 공통 배수 관계, 약수 관계 성립 시 추가 보너스를 얻습니다.</li>
-        <li>조합 조건이 성립하지 않으면 보너스 없이 카드 공격력 합만 적용됩니다.</li>
-        <li>빌런은 턴마다 의도(Intent)에 따라 공격, 방어 상승, 디버프(약화/취약/출혈) 중 하나를 사용합니다.</li>
-        <li>빌런의 체력을 0으로 만들면 보상을 선택하고 다음 스테이지로 넘어갑니다.</li>
-        <li>보상으로 새 카드 획득, 체력 회복, 최대 체력 증가, 디버프 제거 등을 고를 수 있습니다.</li>
-        <li>카드별 최소공배수 조합 보너스는 2장 선택 시에만 발동됩니다.</li>
+        <li>매 턴 적이 1~2개의 <strong>타겟 숫자</strong>를 제시합니다.</li>
+        <li>카드 1장을 선택해 카드 숫자 N과 타겟 숫자 T의 수학적 관계를 판정합니다.</li>
+        <li><strong style="color:var(--critical)">[크리티컬]</strong> N이 타겟들의 최대공약수 또는 최소공배수와 정확히 일치 → <strong>3배 데미지</strong> + 적 기절(1턴)</li>
+        <li><strong style="color:var(--accent)">[강화]</strong> N이 모든 타겟의 공약수 또는 공배수 → <strong>1.5배 데미지</strong> + 방어막 획득</li>
+        <li><strong style="color:var(--good)">[일반]</strong> N이 타겟 중 하나라도 약수/배수 관계 → <strong>1배 데미지</strong></li>
+        <li><strong style="color:var(--muted)">[빗나감]</strong> 관계 없음 → 낮은 고정 데미지</li>
+        <li>적 처치 시 <strong>3장의 랜덤 숫자 카드 중 1장</strong>을 선택해 덱에 추가합니다.</li>
+        <li>특정 이벤트에서 덱의 카드를 제거하여 덱을 압축할 수 있습니다.</li>
+        <li>덱 → 손패 → 버린 더미 순으로 순환합니다. 덱이 비면 버린 더미를 섞어 재충전합니다.</li>
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.0001</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00011</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -597,8 +825,6 @@
         <select id="deckSortSelect">
           <option value="number_desc">숫자 내림차순</option>
           <option value="number_asc">숫자 오름차순</option>
-          <option value="attack_desc">공격력 내림차순</option>
-          <option value="attack_asc">공격력 오름차순</option>
           <option value="name_asc">이름 오름차순</option>
           <option value="name_desc">이름 내림차순</option>
         </select>
@@ -610,7 +836,7 @@
           <div id="drawPileCards" class="pile-cards"></div>
         </section>
         <section class="pile-box">
-          <div class="pile-title">사용 더미(버림 더미)</div>
+          <div class="pile-title">사용 더미(버린 더미)</div>
           <div id="discardPileCards" class="pile-cards"></div>
         </section>
       </div>
@@ -621,35 +847,69 @@
     </div>
   </div>
 
-  <script>
-    const CARD_LIBRARY = [
-      { id: "c1", number: 6, name: "숲의 수호자 엘드린", desc: "고대 수호수와 계약한 기사.", abilityText: "약수/배수 성립 시 피해 +3", ability: { onDivisibleDamage: 3 } },
-      { id: "c2", number: 8, name: "빙결 마녀 아리스", desc: "얼음을 엮어 적의 흐름을 묶는다.", abilityText: "최대공약수가 4 이상이면 보호막 +4", ability: { onGcdAtLeastShield: { min: 4, value: 4 } } },
-      { id: "c3", number: 9, name: "룬 사제 메리온", desc: "수의 균형으로 마력을 증폭한다.", abilityText: "두 수의 최소공배수가 36 이하이면 피해 +4", ability: { onLcmAtMostDamage: { max: 36, value: 4 } } },
-      { id: "c4", number: 10, name: "심연 창기사 카엘", desc: "심연의 창으로 직선을 꿰뚫는다.", abilityText: "기본 피해 +2", ability: { flatDamage: 2 } },
-      { id: "c5", number: 12, name: "천공 대장장이 브론", desc: "금속과 별빛을 단련한다.", abilityText: "약수/배수 성립 시 보호막 +3", ability: { onDivisibleShield: 3 } },
-      { id: "c6", number: 14, name: "황야 추적자 네르", desc: "바람 결을 읽는 추적자.", abilityText: "최대공약수만큼 추가 피해(최대 +6)", ability: { gcdDamageScaleCap: 6 } },
-      { id: "c7", number: 15, name: "불꽃 현자 루멘", desc: "전장의 리듬을 태워 승기를 만든다.", abilityText: "턴 종료 시 회복 +2", ability: { flatHeal: 2 } },
-      { id: "c8", number: 16, name: "지하성 방패병 도란", desc: "지맥의 진동으로 방패를 굳힌다.", abilityText: "기본 보호막 +3", ability: { flatShield: 3 } },
-      { id: "c9", number: 18, name: "폭풍 소환사 이스라", desc: "폭풍으로 수를 재배열한다.", abilityText: "공배수 공명 발동 시 피해 +5", ability: { onResonanceDamage: 5 } },
-      { id: "c10", number: 20, name: "심판관 발타르", desc: "질서를 강제하는 성역의 검.", abilityText: "상대 보호막 -2", ability: { enemyShieldBreak: 2 } },
-      { id: "c11", number: 21, name: "달 그림자 레인", desc: "달빛 틈에서 일격을 꽂는다.", abilityText: "최대공약수가 3 이상이면 피해 +3", ability: { onGcdAtLeastDamage: { min: 3, value: 3 } } },
-      { id: "c12", number: 24, name: "성채 기사 헥터", desc: "성문 앞에서 물러서지 않는다.", abilityText: "두 수의 최소공배수가 48 이하이면 보호막 +5", ability: { onLcmAtMostShield: { max: 48, value: 5 } } },
-      { id: "c13", number: 25, name: "사막 현인 사파", desc: "모래와 시간의 수를 읽는다.", abilityText: "약수/배수 미성립 시에도 피해 +2", ability: { nonDivisibleDamage: 2 } },
-      { id: "c14", number: 27, name: "마도 포병 세레프", desc: "연쇄 폭발로 경계를 무너뜨린다.", abilityText: "두 수의 최소공배수가 60 이하이면 피해 +6", ability: { onLcmAtMostDamage: { max: 60, value: 6 } } },
-      { id: "c15", number: 28, name: "호수의 창백 기사 닉스", desc: "잔잔한 수면처럼 반격한다.", abilityText: "받는 피해 2 감소(보호막 +2)", ability: { flatShield: 2 } },
-      { id: "c16", number: 30, name: "황금 용사 아우로", desc: "빛나는 갑옷으로 적진을 관통한다.", abilityText: "약수/배수 + 공명 동시 발동 시 피해 +5", ability: { comboFinisher: 5 } },
-      { id: "c17", number: 32, name: "빙벽 수호자 글라시온", desc: "얼어붙은 방벽을 펼친다.", abilityText: "최대공약수가 2 이상이면 보호막 +3", ability: { onGcdAtLeastShield: { min: 2, value: 3 } } },
-      { id: "c18", number: 35, name: "야성술사 미르카", desc: "짐승의 리듬으로 공명을 깨운다.", abilityText: "공배수 공명 시 회복 +3", ability: { onResonanceHeal: 3 } },
-      { id: "c19", number: 36, name: "천문 기사 오르테", desc: "별자리 각도로 약점을 찌른다.", abilityText: "기본 피해 +3 / 보호막 +1", ability: { flatDamage: 3, flatShield: 1 } },
-      { id: "c20", number: 40, name: "철벽 집정관 베라", desc: "거대한 수의 질량으로 압도한다.", abilityText: "두 수의 최소공배수가 80 이하이면 보호막 +4", ability: { onLcmAtMostShield: { max: 80, value: 4 } } }
-    ];
+  <div id="swapModal" class="deck-modal">
+    <div class="deck-modal-content">
+      <div class="deck-modal-top">
+        <h3 style="margin:0;">덱 압축: 카드 제거</h3>
+        <button id="closeSwapModalBtn">닫기</button>
+      </div>
+      <div class="small">덱에서 카드 1장을 영구히 제거하여 덱을 압축합니다.</div>
+      <div id="swapCountSummary" class="deck-sort-row" style="margin-top:8px;"></div>
+      <div id="swapItemList" class="swap-item-list"></div>
+    </div>
+  </div>
 
-    const VILLAIN_POOL = [
-      { name: "어둠 군주 모르간", desc: "황혼 마력을 뿜어내는 군주.", style: "aggressive" },
-      { name: "유령 기사 바르트", desc: "방패와 저주를 동시에 다루는 기사.", style: "defensive" },
-      { name: "심연 사도 네크라", desc: "약화와 출혈을 퍼뜨리는 사도.", style: "hexer" },
-      { name: "재앙술사 라그", desc: "방어와 강공을 번갈아 쓰는 술사.", style: "balanced" }
+  <script>
+    // ============================================================
+    //  수학 유틸리티
+    // ============================================================
+    function getGCD(a, b) {
+      let x = Math.abs(a);
+      let y = Math.abs(b);
+      while (y !== 0) { const t = x % y; x = y; y = t; }
+      return x || 1;
+    }
+
+    function getLCM(a, b) {
+      return Math.abs(a * b) / getGCD(a, b);
+    }
+
+    function getGCDArray(arr) {
+      return arr.reduce((acc, v) => getGCD(acc, v));
+    }
+
+    function getLCMArray(arr) {
+      return arr.reduce((acc, v) => getLCM(acc, v));
+    }
+
+    function isDivisor(n, t) { return t % n === 0; }
+    function isMultiple(n, t) { return n % t === 0; }
+    function isDivisorOrMultiple(n, t) { return isDivisor(n, t) || isMultiple(n, t); }
+
+    // ============================================================
+    //  카드 라이브러리 & 이미지
+    // ============================================================
+    const CARD_LIBRARY = [
+      { id: "c1",  name: "숲의 수호자 엘드린",     desc: "고대 수호수와 계약한 기사." },
+      { id: "c2",  name: "빙결 마녀 아리스",       desc: "얼음을 엮어 적의 흐름을 묶는다." },
+      { id: "c3",  name: "룬 사제 메리온",         desc: "수의 균형으로 마력을 증폭한다." },
+      { id: "c4",  name: "심연 창기사 카엘",       desc: "심연의 창으로 직선을 꿰뚫는다." },
+      { id: "c5",  name: "천공 대장장이 브론",      desc: "금속과 별빛을 단련한다." },
+      { id: "c6",  name: "황야 추적자 네르",        desc: "바람 결을 읽는 추적자." },
+      { id: "c7",  name: "불꽃 현자 루멘",         desc: "전장의 리듬을 태워 승기를 만든다." },
+      { id: "c8",  name: "지하성 방패병 도란",      desc: "지맥의 진동으로 방패를 굳힌다." },
+      { id: "c9",  name: "폭풍 소환사 이스라",      desc: "폭풍으로 수를 재배열한다." },
+      { id: "c10", name: "심판관 발타르",           desc: "질서를 강제하는 성역의 검." },
+      { id: "c11", name: "달 그림자 레인",          desc: "달빛 틈에서 일격을 꽂는다." },
+      { id: "c12", name: "성채 기사 헥터",          desc: "성문 앞에서 물러서지 않는다." },
+      { id: "c13", name: "사막 현인 사파",          desc: "모래와 시간의 수를 읽는다." },
+      { id: "c14", name: "마도 포병 세레프",        desc: "연쇄 폭발로 경계를 무너뜨린다." },
+      { id: "c15", name: "호수의 창백 기사 닉스",   desc: "잔잔한 수면처럼 반격한다." },
+      { id: "c16", name: "황금 용사 아우로",        desc: "빛나는 갑옷으로 적진을 관통한다." },
+      { id: "c17", name: "빙벽 수호자 글라시온",    desc: "얼어붙은 방벽을 펼친다." },
+      { id: "c18", name: "야성술사 미르카",         desc: "짐승의 리듬으로 공명을 깨운다." },
+      { id: "c19", name: "천문 기사 오르테",        desc: "별자리 각도로 약점을 찌른다." },
+      { id: "c20", name: "철벽 집정관 베라",        desc: "거대한 수의 질량으로 압도한다." }
     ];
 
     const CARD_IMAGE_BY_ID = {
@@ -675,6 +935,13 @@
       c20: "./Vera_the_Ironclad_Archon.png"
     };
 
+    const VILLAIN_POOL = [
+      { name: "어둠 군주 모르간", desc: "황혼 마력을 뿜어내는 군주.", style: "aggressive" },
+      { name: "유령 기사 바르트", desc: "방패와 저주를 동시에 다루는 기사.", style: "defensive" },
+      { name: "심연 사도 네크라", desc: "약화와 출혈을 퍼뜨리는 사도.", style: "hexer" },
+      { name: "재앙술사 라그", desc: "방어와 강공을 번갈아 쓰는 술사.", style: "balanced" }
+    ];
+
     const VILLAIN_IMAGE_BY_NAME = {
       "어둠 군주 모르간": "./Morgan_the_Dark_Lord.png",
       "유령 기사 바르트": "./Bart_the_Phantom_Knight.png",
@@ -683,34 +950,105 @@
       "훈련용 빌런 골렘": "./Training_Villain_Golem.png"
     };
 
+    // ============================================================
+    //  유틸리티
+    // ============================================================
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function uid(prefix) {
+      return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function sleep(ms) {
+      return new Promise(r => setTimeout(r, ms));
+    }
+
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    function pathTypeLabelKo(type) {
+      const labels = {
+        aggressive: "공격형",
+        defensive: "방어형",
+        hexer: "저주형",
+        balanced: "균형형",
+        tutorial: "튜토리얼"
+      };
+      return labels[type] || type;
+    }
+
+    // ============================================================
+    //  숫자 범위(스테이지별)
+    // ============================================================
+    function numberRangeForStage(stage) {
+      if (stage <= 3)  return { min: 2, max: 20 };
+      if (stage <= 6)  return { min: 2, max: 30 };
+      if (stage <= 10) return { min: 2, max: 50 };
+      if (stage <= 15) return { min: 2, max: 70 };
+      return { min: 2, max: 100 };
+    }
+
+    function targetRangeForStage(stage) {
+      if (stage <= 3)  return { min: 4, max: 24 };
+      if (stage <= 6)  return { min: 6, max: 36 };
+      if (stage <= 10) return { min: 8, max: 60 };
+      if (stage <= 15) return { min: 10, max: 80 };
+      return { min: 12, max: 100 };
+    }
+
+    // ============================================================
+    //  카드 인스턴스 생성
+    // ============================================================
+    function createCardInstance(template, stage) {
+      const range = numberRangeForStage(stage);
+      const number = randomInt(range.min, range.max);
+      return {
+        ...template,
+        number,
+        baseDamage: Math.floor(number / 3) + 3,
+        uid: uid(template.id)
+      };
+    }
+
+    // ============================================================
+    //  게임 상태
+    // ============================================================
     const state = {
       stage: 1,
       node: 0,
       mode: "map",
-      selected: [],
+      selectedCard: null,
       currentMapChoices: [],
-      tutorial: {
-        active: true,
-        turn: 1
-      },
+      tutorial: { active: true, turn: 1 },
       turnLocked: false,
       player: {
-        hp: 72,
-        maxHp: 72,
+        hp: 80,
+        maxHp: 80,
+        shield: 0,
         deck: [],
         discard: [],
         hand: [],
-        pendingStageStartDraw: 0,
         status: { weaken: 0, frail: 0, bleed: 0 }
       },
-      deckView: {
-        open: false,
-        sortMode: "number_desc"
-      },
+      deckView: { open: false, sortMode: "number_desc" },
+      swapView: { open: false },
       villain: null,
       runOver: false
     };
 
+    // ============================================================
+    //  DOM 참조
+    // ============================================================
     const mapAreaEl = document.getElementById("mapArea");
     const villainAreaEl = document.getElementById("villainArea");
     const rewardAreaEl = document.getElementById("rewardArea");
@@ -721,6 +1059,7 @@
     const playerHpPanelEl = document.getElementById("playerHpPanel");
     const playerHpTextEl = document.getElementById("playerHpText");
     const playerHpBarEl = document.getElementById("playerHpBar");
+    const playerStatusEffectsEl = document.getElementById("playerStatusEffects");
     const deckStatusEl = document.getElementById("deckStatus");
     const statusLineEl = document.getElementById("statusLine");
     const calcAreaEl = document.getElementById("calcArea");
@@ -737,316 +1076,19 @@
     const drawPileCardsEl = document.getElementById("drawPileCards");
     const discardPileCardsEl = document.getElementById("discardPileCards");
     const ownedPileCardsEl = document.getElementById("ownedPileCards");
+    const swapModalEl = document.getElementById("swapModal");
+    const closeSwapModalBtnEl = document.getElementById("closeSwapModalBtn");
+    const swapCountSummaryEl = document.getElementById("swapCountSummary");
+    const swapItemListEl = document.getElementById("swapItemList");
+
+    // ============================================================
+    //  BGM
+    // ============================================================
     const bgmAudio = new Audio("./slowsound--131741.mp3");
     let bgmManuallyPaused = false;
     let bgmUnlockHooked = false;
-
     bgmAudio.loop = true;
     bgmAudio.volume = 0.35;
-
-    function gcd(a, b) {
-      let x = Math.abs(a);
-      let y = Math.abs(b);
-      while (y !== 0) {
-        const t = x % y;
-        x = y;
-        y = t;
-      }
-      return x || 1;
-    }
-
-    function lcm(a, b) {
-      return Math.abs(a * b) / gcd(a, b);
-    }
-
-    function shuffle(arr) {
-      const copy = [...arr];
-      for (let i = copy.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const temp = copy[i];
-        copy[i] = copy[j];
-        copy[j] = temp;
-      }
-      return copy;
-    }
-
-    function uid(cardId) {
-      return `${cardId}_${Math.random().toString(36).slice(2, 9)}`;
-    }
-
-    function getStageNumberMax(stage) {
-      if (stage <= 10) return 30;
-      if (stage <= 20) return 45;
-      if (stage <= 30) return 60;
-      if (stage <= 40) return 75;
-      if (stage <= 50) return 90;
-      return 100;
-    }
-
-    function randomInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function createCardInstance(template, stageForNumber) {
-      const maxNumber = getStageNumberMax(Math.max(1, stageForNumber || 1));
-      const randomNumber = randomInt(1, maxNumber);
-      return {
-        ...template,
-        number: randomNumber,
-        uid: uid(template.id)
-      };
-    }
-
-    function createDeck(size, stageForNumber = state.stage) {
-      const deck = [];
-      for (let i = 0; i < size; i += 1) {
-        const template = CARD_LIBRARY[Math.floor(Math.random() * CARD_LIBRARY.length)];
-        deck.push(createCardInstance(template, stageForNumber));
-      }
-      return shuffle(deck);
-    }
-
-    function draw(entity, count) {
-      for (let i = 0; i < count; i += 1) {
-        if (entity.deck.length === 0) {
-          entity.deck = shuffle(entity.discard);
-          entity.discard = [];
-        }
-        if (entity.deck.length === 0) return;
-        entity.deck = shuffle(entity.deck);
-        const drawnCard = entity.deck.pop();
-        entity.hand.push(drawnCard);
-      }
-    }
-
-    function getCardImagePath(card) {
-      return CARD_IMAGE_BY_ID[card.id] || "";
-    }
-
-    function getVillainImagePath(villain) {
-      if (!villain) return "";
-      return VILLAIN_IMAGE_BY_NAME[villain.name] || "";
-    }
-
-    function sortCardsForView(cards, sortMode) {
-      const copy = [...cards];
-      if (sortMode === "number_asc") {
-        copy.sort((a, b) => a.number - b.number);
-        return copy;
-      }
-      if (sortMode === "attack_desc") {
-        copy.sort((a, b) => {
-          const atkDiff = cardAttackPower(b) - cardAttackPower(a);
-          if (atkDiff !== 0) return atkDiff;
-          return b.number - a.number;
-        });
-        return copy;
-      }
-      if (sortMode === "attack_asc") {
-        copy.sort((a, b) => {
-          const atkDiff = cardAttackPower(a) - cardAttackPower(b);
-          if (atkDiff !== 0) return atkDiff;
-          return a.number - b.number;
-        });
-        return copy;
-      }
-      if (sortMode === "name_asc") {
-        copy.sort((a, b) => a.name.localeCompare(b.name, "ko"));
-        return copy;
-      }
-      if (sortMode === "name_desc") {
-        copy.sort((a, b) => b.name.localeCompare(a.name, "ko"));
-        return copy;
-      }
-      copy.sort((a, b) => b.number - a.number);
-      return copy;
-    }
-
-    function renderPileCards(targetEl, cards) {
-      if (!targetEl) return;
-      if (!cards.length) {
-        targetEl.innerHTML = "<div class='pile-card'>없음</div>";
-        return;
-      }
-      targetEl.innerHTML = cards.map((card) => `
-        <div class="pile-card">
-          <span>${card.name}</span>
-          <span>숫자 ${card.number} / 공격력 ${cardAttackPower(card)}</span>
-        </div>
-      `).join("");
-    }
-
-    function renderDeckModal() {
-      if (!deckModalEl) return;
-      if (!state.deckView.open) {
-        deckModalEl.classList.remove("open");
-        return;
-      }
-      deckModalEl.classList.add("open");
-      const drawSorted = sortCardsForView(state.player.deck, state.deckView.sortMode);
-      const discardSorted = sortCardsForView(state.player.discard, state.deckView.sortMode);
-      const ownedSorted = sortCardsForView(
-        [...state.player.deck, ...state.player.hand, ...state.player.discard],
-        state.deckView.sortMode
-      );
-      renderPileCards(drawPileCardsEl, drawSorted);
-      renderPileCards(discardPileCardsEl, discardSorted);
-      renderPileCards(ownedPileCardsEl, ownedSorted);
-      if (deckCountSummaryEl) {
-        const total = state.player.deck.length + state.player.discard.length + state.player.hand.length;
-        deckCountSummaryEl.textContent = `덱 ${state.player.deck.length}장 / 사용더미 ${state.player.discard.length}장 / 손패 ${state.player.hand.length}장 / 총 ${total}장`;
-      }
-      if (deckSortSelectEl) {
-        deckSortSelectEl.value = state.deckView.sortMode;
-      }
-    }
-
-    function cardAttackPower(card) {
-      return Math.floor(card.number / 5) + 2;
-    }
-
-    function gcd3(a, b, c) {
-      return gcd(gcd(a, b), c);
-    }
-
-    function evaluatePlayerSelection(cards) {
-      const nums = cards.map((c) => c.number);
-      const count = cards.length;
-      const baseDamage = cards.reduce((sum, card) => sum + cardAttackPower(card), 0);
-      let bonusDamage = 0;
-      let shield = 0;
-      const notes = [];
-      const bonusItems = [];
-      let hasValidBonus = false;
-
-      if (count === 1) {
-        notes.push("1장 단일 공격: 보너스 없이 공격력만 적용");
-      } else if (count === 2) {
-        const [a, b] = nums;
-        const pairLcm = lcm(a, b);
-        let anyTwoCardBonus = false;
-        if (a % b === 0 || b % a === 0) {
-          bonusDamage += 8;
-          bonusItems.push({ name: "2장 약수/배수 보너스", value: 8, stat: "피해" });
-          notes.push(`두 수(${a}, ${b})가 약수/배수 관계: +8`);
-          anyTwoCardBonus = true;
-        }
-
-        cards.forEach((card) => {
-          const ab = card.ability || {};
-          if (ab.onLcmAtMostDamage && pairLcm <= ab.onLcmAtMostDamage.max) {
-            bonusDamage += ab.onLcmAtMostDamage.value;
-            bonusItems.push({
-              name: `${card.name} 최소공배수 카드 보너스`,
-              value: ab.onLcmAtMostDamage.value,
-              stat: "피해"
-            });
-            notes.push(`${card.name}: 두 수의 최소공배수(${pairLcm})가 ${ab.onLcmAtMostDamage.max} 이하이므로 피해 +${ab.onLcmAtMostDamage.value}`);
-            anyTwoCardBonus = true;
-          }
-          if (ab.onLcmAtMostShield && pairLcm <= ab.onLcmAtMostShield.max) {
-            shield += ab.onLcmAtMostShield.value;
-            bonusItems.push({
-              name: `${card.name} 최소공배수 카드 보너스`,
-              value: ab.onLcmAtMostShield.value,
-              stat: "보호막"
-            });
-            notes.push(`${card.name}: 두 수의 최소공배수(${pairLcm})가 ${ab.onLcmAtMostShield.max} 이하이므로 보호막 +${ab.onLcmAtMostShield.value}`);
-            anyTwoCardBonus = true;
-          }
-        });
-
-        if (!anyTwoCardBonus) {
-          notes.push("2장 조합 불성립: 보너스 없이 공격력 합만 적용");
-        }
-        hasValidBonus = anyTwoCardBonus;
-      } else if (count === 3) {
-        const [a, b, c] = nums;
-        const triples = [
-          [a, b, c],
-          [b, a, c],
-          [c, a, b]
-        ];
-
-        let gcdOrLcmLink = false;
-        triples.forEach(([x, y, z]) => {
-          if (x === gcd(y, z) || x === lcm(y, z)) {
-            gcdOrLcmLink = true;
-          }
-        });
-        if (gcdOrLcmLink) {
-          bonusDamage += 10;
-          bonusItems.push({ name: "3장 최대공약수/최소공배수 연결 보너스", value: 10, stat: "피해" });
-          notes.push("세 수 중 하나가 나머지 두 수의 최대공약수 또는 최소공배수: +10");
-        }
-
-        const commonDivisor = gcd3(a, b, c);
-        if (commonDivisor > 1) {
-          const commonBonus = 6 + Math.min(commonDivisor, 6);
-          bonusDamage += commonBonus;
-          bonusItems.push({ name: "3장 공통 배수 보너스", value: commonBonus, stat: "피해" });
-          notes.push(`세 수가 모두 ${commonDivisor}의 배수: +${commonBonus}`);
-        }
-
-        let twoDivisorsOneTarget = false;
-        triples.forEach(([target, d1, d2]) => {
-          if (target % d1 === 0 && target % d2 === 0) {
-            twoDivisorsOneTarget = true;
-          }
-        });
-        if (twoDivisorsOneTarget) {
-          bonusDamage += 10;
-          bonusItems.push({ name: "3장 이중 약수 보너스", value: 10, stat: "피해" });
-          notes.push("두 수가 나머지 하나의 약수 관계: +10");
-        }
-
-        if (bonusDamage === 0) {
-          notes.push("3장 조합 불성립: 보너스 없이 공격력 합만 적용");
-        }
-        hasValidBonus = bonusDamage > 0;
-      }
-
-      return {
-        damage: baseDamage + bonusDamage,
-        shield,
-        heal: 0,
-        shieldBreak: 0,
-        notes,
-        breakdown: {
-          count,
-          numbers: nums,
-          baseDamage,
-          bonusDamage,
-          bonusItems,
-          hasValidBonus
-        }
-      };
-    }
-
-    function canCompleteToValidThree(twoCards) {
-      const selectedIds = new Set(twoCards.map((c) => c.uid));
-      const candidates = state.player.hand.filter((card) => !selectedIds.has(card.uid));
-      for (let i = 0; i < candidates.length; i += 1) {
-        const test = evaluatePlayerSelection([...twoCards, candidates[i]]);
-        if (test.breakdown.hasValidBonus) return true;
-      }
-      return false;
-    }
-
-    function tutorialVillainIntentByTurn(turn) {
-      if (turn === 1) return { type: "guard", value: 6 };
-      if (turn === 2) return { type: "attack", value: 8 };
-      if (turn === 3) return { type: "hex", value: 2 };
-      return { type: "attack", value: 7 };
-    }
-
-    function addLog(text, tags = []) {
-      const div = document.createElement("div");
-      div.className = "entry";
-      const tagHtml = tags.map((tag) => `<span class="tag">${tag}</span>`).join("");
-      div.innerHTML = `${tagHtml}${text}`;
-      logBoxEl.prepend(div);
-    }
 
     function updateBgmButtonLabel() {
       if (!bgmToggleBtnEl) return;
@@ -1054,12 +1096,7 @@
     }
 
     async function playBgm() {
-      try {
-        await bgmAudio.play();
-        bgmManuallyPaused = false;
-      } catch (_err) {
-        // 자동재생 제한 시, 사용자의 상호작용으로 재시도한다.
-      }
+      try { await bgmAudio.play(); bgmManuallyPaused = false; } catch (_) {}
       updateBgmButtonLabel();
     }
 
@@ -1073,113 +1110,199 @@
       if (bgmUnlockHooked) return;
       bgmUnlockHooked = true;
       const unlock = async () => {
-        if (!bgmManuallyPaused && bgmAudio.paused) {
-          await playBgm();
-        }
+        if (!bgmManuallyPaused && bgmAudio.paused) await playBgm();
       };
       window.addEventListener("pointerdown", unlock, { once: true });
       window.addEventListener("keydown", unlock, { once: true });
     }
 
-    function sleep(ms) {
-      return new Promise((resolve) => {
-        setTimeout(resolve, ms);
+    // ============================================================
+    //  Deck Manager (상태머신)
+    // ============================================================
+    function createInitialDeck() {
+      const numbers = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12];
+      const deck = numbers.map((num, i) => {
+        const template = CARD_LIBRARY[i % CARD_LIBRARY.length];
+        return {
+          ...template,
+          number: num,
+          baseDamage: Math.floor(num / 3) + 3,
+          uid: uid(template.id)
+        };
       });
+      return shuffle(deck);
     }
 
-    function pulseClass(el, className, duration = 380) {
-      if (!el) return;
-      el.classList.remove(className);
-      void el.offsetWidth;
-      el.classList.add(className);
-      setTimeout(() => {
-        el.classList.remove(className);
-      }, duration);
-    }
-
-    function spawnDamagePop(el, text, type = "dmg") {
-      if (!el) return;
-      const node = document.createElement("div");
-      node.className = `damage-pop ${type}`;
-      node.textContent = text;
-      el.appendChild(node);
-      setTimeout(() => {
-        node.remove();
-      }, 1250);
-    }
-
-    async function animatePlayerAttack(hitDamage, playedCards) {
-      playedCards.forEach((card, idx) => {
-        const el = handCardsEl.querySelector(`.card[data-uid="${card.uid}"]`);
-        if (el) {
-          setTimeout(() => {
-            pulseClass(el, "card-lunge-player", 720);
-          }, idx * 70);
+    function drawCards(count) {
+      const p = state.player;
+      for (let i = 0; i < count; i++) {
+        if (p.deck.length === 0) {
+          if (p.discard.length === 0) return;
+          p.deck = shuffle(p.discard);
+          p.discard = [];
+          addLog("버린 더미를 섞어 덱을 재충전!", ["덱"]);
         }
-      });
-      pulseClass(villainAreaEl, "impact-villain");
-      pulseClass(villainAreaEl, "impact-swing");
-      if (hitDamage > 0) {
-        spawnDamagePop(villainAreaEl, `-${hitDamage}`, "dmg");
+        p.hand.push(p.deck.pop());
       }
-      await sleep(920);
     }
 
-    async function animateVillainAttack(actualDamage, blocked) {
-      const villainPortraitEl = document.getElementById("villainPortrait");
-      pulseClass(villainPortraitEl, "card-lunge-villain", 720);
-      pulseClass(playerHpPanelEl, "impact-player");
-      pulseClass(playerHpPanelEl, "impact-swing");
-      if (actualDamage > 0) {
-        spawnDamagePop(playerHpPanelEl, `-${actualDamage}`, "dmg");
-      }
-      if (blocked > 0) {
-        spawnDamagePop(playerHpPanelEl, `막음 ${blocked}`, "block");
-      }
-      await sleep(920);
+    function discardHand() {
+      state.player.discard.push(...state.player.hand);
+      state.player.hand = [];
     }
 
-    function removeCardsFromHand(cards) {
-      cards.forEach((card) => {
-        const idx = state.player.hand.findIndex((item) => item.uid === card.uid);
+    function discardCard(card) {
+      const idx = state.player.hand.findIndex(c => c.uid === card.uid);
+      if (idx >= 0) {
+        state.player.discard.push(state.player.hand.splice(idx, 1)[0]);
+      }
+    }
+
+    function removeCardPermanently(cardUid) {
+      for (const pile of ["hand", "deck", "discard"]) {
+        const idx = state.player[pile].findIndex(c => c.uid === cardUid);
         if (idx >= 0) {
-          const used = state.player.hand.splice(idx, 1)[0];
-          state.player.discard.push(used);
+          const removed = state.player[pile].splice(idx, 1)[0];
+          return removed;
         }
-      });
-    }
-
-    function getStatusText() {
-      const s = state.player.status;
-      const parts = [];
-      if (s.weaken > 0) parts.push(`약화 ${s.weaken}턴`);
-      if (s.frail > 0) parts.push(`취약 ${s.frail}턴`);
-      if (s.bleed > 0) parts.push(`출혈 ${s.bleed}턴`);
-      return parts.length ? `플레이어 상태: ${parts.join(" / ")}` : "플레이어 상태: 정상";
-    }
-
-    function rollMapChoices() {
-      const names = ["잊힌 숲길", "붉은 협곡", "안개 성채", "마력 균열", "하늘 회랑"];
-      const types = ["aggressive", "defensive", "hexer"];
-      const choices = [];
-      for (let i = 0; i < 3; i += 1) {
-        const type = types[Math.floor(Math.random() * types.length)];
-        const routeName = names[Math.floor(Math.random() * names.length)];
-        const boon = Math.random() < 0.5 ? "입장 시 HP +4" : "입장 시 카드 1장 드로우";
-        choices.push({
-          id: `${routeName}_${i}`,
-          title: routeName,
-          type,
-          boon
-        });
       }
-      return choices;
+      return null;
     }
 
+    function addCardToDeck(card) {
+      state.player.discard.push(card);
+    }
+
+    // ============================================================
+    //  타겟 숫자 생성 (적이 매 턴 제시)
+    // ============================================================
+    function rollTargetNumbers(stage) {
+      const range = targetRangeForStage(stage);
+      const count = 2;
+      const targets = [];
+      for (let i = 0; i < count; i++) {
+        targets.push(randomInt(range.min, range.max));
+      }
+      return targets;
+    }
+
+    // ============================================================
+    //  카드-타겟 관계 판정 (핵심 로직)
+    // ============================================================
+    function evaluateCardVsTargets(cardNumber, targets) {
+      const N = cardNumber;
+      const T = targets;
+
+      if (T.length === 1) {
+        const t = T[0];
+        const g = getGCD(N, t);
+        const l = getLCM(N, t);
+
+        if (N === g || N === l) {
+          return { rank: "critical", multiplier: 3, shield: 0, stun: true,
+            reason: N === g
+              ? `N(${N}) = 최대공약수(${N}, ${t}) = ${g} → 크리티컬!`
+              : `N(${N}) = 최소공배수(${N}, ${t}) = ${l} → 크리티컬!`
+          };
+        }
+        if (isDivisor(N, t)) {
+          return { rank: "enhanced", multiplier: 1.5, shield: Math.floor(N / 2), stun: false,
+            reason: `${N}은 ${t}의 약수 (공약수 관계) → 강화 공격`
+          };
+        }
+        if (isMultiple(N, t)) {
+          return { rank: "enhanced", multiplier: 1.5, shield: Math.floor(t / 2), stun: false,
+            reason: `${N}은 ${t}의 배수 (공배수 관계) → 강화 공격`
+          };
+        }
+        if (g > 1) {
+          return { rank: "normal", multiplier: 1, shield: 0, stun: false,
+            reason: `최대공약수(${N}, ${t}) = ${g} > 1, 공약수 존재 → 일반 공격`
+          };
+        }
+        return { rank: "miss", multiplier: 0, shield: 0, stun: false,
+          reason: `${N}과 ${t}은 서로소 → 빗나감`
+        };
+      }
+
+      const gcdAll = getGCDArray(T);
+      const lcmAll = getLCMArray(T);
+
+      if (N === gcdAll || N === lcmAll) {
+        return { rank: "critical", multiplier: 3, shield: 0, stun: true,
+          reason: N === gcdAll
+            ? `N(${N}) = 최대공약수(${T.join(", ")}) = ${gcdAll} → 크리티컬!`
+            : `N(${N}) = 최소공배수(${T.join(", ")}) = ${lcmAll} → 크리티컬!`
+        };
+      }
+
+      const isCommonDivisor = T.every(t => t % N === 0);
+      const isCommonMultiple = T.every(t => N % t === 0);
+      if (isCommonDivisor || isCommonMultiple) {
+        const shieldVal = isCommonDivisor
+          ? Math.floor(gcdAll / 2) + 2
+          : Math.floor(N / T.length / 2) + 2;
+        return { rank: "enhanced", multiplier: 1.5, shield: shieldVal, stun: false,
+          reason: isCommonDivisor
+            ? `${N}은 모든 타겟(${T.join(", ")})의 공약수 → 강화 공격`
+            : `${N}은 모든 타겟(${T.join(", ")})의 공배수 → 강화 공격`
+        };
+      }
+
+      const anyRelation = T.some(t => isDivisorOrMultiple(N, t));
+      if (anyRelation) {
+        const relatedTargets = T.filter(t => isDivisorOrMultiple(N, t));
+        return { rank: "normal", multiplier: 1, shield: 0, stun: false,
+          reason: `${N}은 타겟 ${relatedTargets.join(", ")}과 약수/배수 관계 → 일반 공격`
+        };
+      }
+
+      return { rank: "miss", multiplier: 0, shield: 0, stun: false,
+        reason: `${N}과 타겟(${T.join(", ")}) 사이에 수학적 관계 없음 → 빗나감`
+      };
+    }
+
+    // ============================================================
+    //  데미지 계산
+    // ============================================================
+    const MISS_FIXED_DAMAGE = 2;
+
+    function calculateDamage(card, targets) {
+      const eval_ = evaluateCardVsTargets(card.number, targets);
+      let damage;
+      if (eval_.rank === "miss") {
+        damage = MISS_FIXED_DAMAGE;
+      } else {
+        damage = Math.floor(card.baseDamage * eval_.multiplier);
+      }
+
+      if (state.player.status.weaken > 0 && eval_.rank !== "miss") {
+        damage = Math.floor(damage * 0.75);
+      }
+
+      let shield = eval_.shield;
+      if (state.player.status.frail > 0 && shield > 0) {
+        shield = Math.floor(shield * 0.65);
+      }
+
+      return {
+        damage,
+        shield,
+        stun: eval_.stun,
+        rank: eval_.rank,
+        reason: eval_.reason,
+        baseDamage: card.baseDamage,
+        multiplier: eval_.multiplier
+      };
+    }
+
+    // ============================================================
+    //  빌런 시스템
+    // ============================================================
     function buildVillain(pathType) {
       const base = VILLAIN_POOL[Math.floor(Math.random() * VILLAIN_POOL.length)];
-      const hpBase = 42 + state.stage * 9;
-      const hpBonus = pathType === "defensive" ? 16 : pathType === "aggressive" ? 6 : 10;
+      const hpBase = 35 + state.stage * 8;
+      const hpBonus = pathType === "defensive" ? 14 : pathType === "aggressive" ? 4 : 8;
       const villain = {
         name: base.name,
         desc: base.desc,
@@ -1187,44 +1310,54 @@
         maxHp: hpBase + hpBonus,
         hp: hpBase + hpBonus,
         shield: 0,
-        intent: null
+        targets: [],
+        intent: null,
+        stunned: false,
+        status: { weaken: 0, frail: 0, bleed: 0 }
       };
+      villain.targets = rollTargetNumbers(state.stage);
       villain.intent = rollVillainIntent(villain);
       return villain;
     }
 
     function weightedPick(entries) {
-      const total = entries.reduce((sum, item) => sum + item.weight, 0);
+      const total = entries.reduce((s, e) => s + e.weight, 0);
       let roll = Math.random() * total;
-      for (let i = 0; i < entries.length; i += 1) {
-        roll -= entries[i].weight;
-        if (roll <= 0) return entries[i].type;
-      }
+      for (const e of entries) { roll -= e.weight; if (roll <= 0) return e.type; }
       return entries[entries.length - 1].type;
     }
 
     function rollVillainIntent(villain) {
-      let picked;
-      if (villain.style === "aggressive") {
-        picked = weightedPick([{ type: "attack", weight: 55 }, { type: "guard", weight: 20 }, { type: "hex", weight: 25 }]);
-      } else if (villain.style === "defensive") {
-        picked = weightedPick([{ type: "attack", weight: 30 }, { type: "guard", weight: 45 }, { type: "hex", weight: 25 }]);
-      } else {
-        picked = weightedPick([{ type: "attack", weight: 25 }, { type: "guard", weight: 25 }, { type: "hex", weight: 50 }]);
-      }
-
       if (state.tutorial.active) {
         return tutorialVillainIntentByTurn(state.tutorial.turn);
       }
 
+      let picked;
+      if (villain.style === "aggressive") {
+        picked = weightedPick([
+          { type: "attack", weight: 55 }, { type: "guard", weight: 20 }, { type: "hex", weight: 25 }
+        ]);
+      } else if (villain.style === "defensive") {
+        picked = weightedPick([
+          { type: "attack", weight: 30 }, { type: "guard", weight: 45 }, { type: "hex", weight: 25 }
+        ]);
+      } else {
+        picked = weightedPick([
+          { type: "attack", weight: 25 }, { type: "guard", weight: 25 }, { type: "hex", weight: 50 }
+        ]);
+      }
+
       const scale = 2 + Math.floor(state.stage / 2);
-      if (picked === "attack") {
-        return { type: "attack", value: 8 + scale * 2 };
-      }
-      if (picked === "guard") {
-        return { type: "guard", value: 7 + scale * 2 };
-      }
+      if (picked === "attack") return { type: "attack", value: 7 + scale * 2 };
+      if (picked === "guard") return { type: "guard", value: 6 + scale * 2 };
       return { type: "hex", value: 2 + Math.floor(scale / 2) };
+    }
+
+    function tutorialVillainIntentByTurn(turn) {
+      if (turn === 1) return { type: "guard", value: 4 };
+      if (turn === 2) return { type: "attack", value: 6 };
+      if (turn === 3) return { type: "hex", value: 1 };
+      return { type: "attack", value: 5 };
     }
 
     function intentText(intent) {
@@ -1234,144 +1367,183 @@
       return "예고: 저주 부여(약화/취약/출혈)";
     }
 
-    function applyMapBoon(boonText) {
-      if (boonText.includes("HP +4")) {
-        state.player.hp = Math.min(state.player.maxHp, state.player.hp + 4);
+    // ============================================================
+    //  로그
+    // ============================================================
+    function addLog(text, tags = []) {
+      const div = document.createElement("div");
+      div.className = "entry";
+      const tagHtml = tags.map(tag => {
+        let cls = "tag";
+        if (tag === "크리티컬") cls += " critical";
+        else if (tag === "강화") cls += " enhanced";
+        else if (tag === "빗나감") cls += " miss";
+        return `<span class="${cls}">${tag}</span>`;
+      }).join("");
+      div.innerHTML = `${tagHtml}${text}`;
+      logBoxEl.prepend(div);
+    }
+
+    // ============================================================
+    //  애니메이션
+    // ============================================================
+    function pulseClass(el, className, duration = 380) {
+      if (!el) return;
+      el.classList.remove(className);
+      void el.offsetWidth;
+      el.classList.add(className);
+      setTimeout(() => el.classList.remove(className), duration);
+    }
+
+    function spawnDamagePop(el, text, type = "dmg") {
+      if (!el) return;
+      const node = document.createElement("div");
+      node.className = `damage-pop ${type}`;
+      node.textContent = text;
+      el.appendChild(node);
+      setTimeout(() => node.remove(), 1250);
+    }
+
+    async function animatePlayerAttack(result, card) {
+      const el = handCardsEl.querySelector(`.card[data-uid="${card.uid}"]`);
+      if (el) pulseClass(el, "card-lunge-player", 720);
+
+      if (result.rank === "critical") {
+        pulseClass(villainAreaEl, "crit-flash", 1000);
+      }
+      pulseClass(villainAreaEl, "impact-villain");
+      pulseClass(villainAreaEl, "impact-swing");
+
+      if (result.rank === "miss") {
+        spawnDamagePop(villainAreaEl, "MISS", "miss");
+      } else if (result.rank === "critical") {
+        spawnDamagePop(villainAreaEl, `−${result.damage} CRIT!`, "crit");
       } else {
-        draw(state.player, 1);
+        spawnDamagePop(villainAreaEl, `−${result.damage}`, "dmg");
       }
-      addLog(`길 보너스 적용: ${boonText}`, ["월드맵"]);
+
+      if (result.stun) {
+        spawnDamagePop(villainAreaEl, "기절!", "stun-text");
+      }
+
+      await sleep(1000);
     }
 
-    function choosePath(choice) {
-      if (state.mode !== "map" || state.runOver) return;
-      state.node += 1;
-      applyMapBoon(choice.boon);
-      state.villain = buildVillain(choice.type);
-      state.mode = "battle";
-      state.selected = [];
-      if (state.player.pendingStageStartDraw > 0) {
-        const bonusDraw = state.player.pendingStageStartDraw;
-        draw(state.player, bonusDraw);
-        state.player.pendingStageStartDraw = 0;
-        addLog(`스테이지 시작 보너스: 카드 ${bonusDraw}장 추가 드로우`, ["보상"]);
-      }
-      addLog(`스테이지 ${state.stage} 전투 시작: ${state.villain.name}`, ["전투"]);
-      addLog(intentText(state.villain.intent), ["빌런"]);
-      renderAll();
+    async function animateVillainAttack(actualDamage, blocked) {
+      const villainPortraitEl = document.getElementById("villainPortrait");
+      pulseClass(villainPortraitEl, "card-lunge-villain", 720);
+      pulseClass(playerHpPanelEl, "impact-player");
+      pulseClass(playerHpPanelEl, "impact-swing");
+      if (actualDamage > 0) spawnDamagePop(playerHpPanelEl, `−${actualDamage}`, "dmg");
+      if (blocked > 0) spawnDamagePop(playerHpPanelEl, `막음 ${blocked}`, "block");
+      await sleep(920);
     }
 
+    // ============================================================
+    //  턴 진행
+    // ============================================================
     function applyPlayerBleedStartTurn() {
       if (state.player.status.bleed > 0) {
-        const bleedDmg = 2;
-        state.player.hp -= bleedDmg;
-        state.player.status.bleed -= 1;
-        addLog(`출혈로 ${bleedDmg} 피해`, ["디버프"]);
+        state.player.hp -= 2;
+        state.player.status.bleed--;
+        addLog("출혈로 2 피해", ["디버프"]);
       }
     }
 
-    function applyVillainIntent(playerTurnShield) {
+    function applyVillainIntent() {
       const v = state.villain;
       const intent = v.intent;
-      if (!intent) return;
-      let actionResult = null;
+      if (!intent) return null;
 
       if (intent.type === "attack") {
         let incoming = intent.value;
-        const blocked = Math.min(playerTurnShield, incoming);
+        const blocked = Math.min(state.player.shield, incoming);
         incoming -= blocked;
+        state.player.shield = Math.max(0, state.player.shield - intent.value);
         state.player.hp -= incoming;
-        addLog(`빌런 공격 ${intent.value} (보호막 ${blocked} 방어, 실제 ${incoming})`, ["빌런"]);
-        actionResult = { type: "attack", blocked, actualDamage: incoming };
-      } else if (intent.type === "guard") {
-        v.shield += intent.value;
-        addLog(`빌런이 방어력 +${intent.value} 획득`, ["빌런"]);
-        actionResult = { type: "guard", value: intent.value };
-      } else {
-        const roll = Math.random();
-        if (roll < 0.34) {
-          state.player.status.weaken += 2;
-          addLog("빌런 저주: 약화 2턴 (공격 25% 감소)", ["디버프"]);
-        } else if (roll < 0.68) {
-          state.player.status.frail += 2;
-          addLog("빌런 저주: 취약 2턴 (보호막 35% 감소)", ["디버프"]);
-        } else {
-          state.player.status.bleed += 3;
-          addLog("빌런 저주: 출혈 3턴", ["디버프"]);
-        }
-        actionResult = { type: "hex" };
+        addLog(`빌런 공격 ${intent.value} (방어막 ${blocked} 방어, 실제 ${incoming})`, ["빌런"]);
+        return { type: "attack", blocked, actualDamage: incoming };
       }
 
-      if (state.tutorial.active) {
-        state.tutorial.turn += 1;
+      if (intent.type === "guard") {
+        v.shield += intent.value;
+        addLog(`빌런이 방어력 +${intent.value} 획득`, ["빌런"]);
+        return { type: "guard", value: intent.value };
       }
-      v.intent = rollVillainIntent(v);
-      addLog(intentText(v.intent), ["빌런"]);
-      return actionResult;
+
+      const roll = Math.random();
+      if (roll < 0.34) {
+        state.player.status.weaken += 2;
+        addLog("빌런 저주: 약화 2턴 (공격 25% 감소)", ["디버프"]);
+      } else if (roll < 0.68) {
+        state.player.status.frail += 2;
+        addLog("빌런 저주: 취약 2턴 (방어막 35% 감소)", ["디버프"]);
+      } else {
+        state.player.status.bleed += 3;
+        addLog("빌런 저주: 출혈 3턴", ["디버프"]);
+      }
+      return { type: "hex" };
     }
 
     async function doTurn() {
       if (state.mode !== "battle" || state.runOver || state.turnLocked) return;
-      if (state.selected.length < 1 || state.selected.length > 3) {
-        addLog("카드를 1장 이상 3장 이하로 선택해야 합니다.", ["알림"]);
+      if (!state.selectedCard) {
+        addLog("카드를 1장 선택해주세요.", ["알림"]);
         return;
       }
 
-      applyPlayerBleedStartTurn();
-      if (state.player.hp <= 0) {
-        finishRun();
-        return;
-      }
-
-      const playedCards = [...state.selected];
-      const result = evaluatePlayerSelection(playedCards);
-      if (playedCards.length > 1 && !result.breakdown.hasValidBonus) {
-        addLog("보너스가 성립하지 않아 2장/3장 공격은 사용할 수 없습니다. 1장만 선택하세요.", ["알림"]);
-        return;
-      }
       state.turnLocked = true;
       updateTop();
 
       try {
-        let playerDamage = result.damage;
-        if (state.player.status.weaken > 0) {
-          playerDamage = Math.floor(playerDamage * 0.75);
-          addLog("약화 상태로 플레이어 피해 25% 감소", ["디버프"]);
+        applyPlayerBleedStartTurn();
+        if (state.player.hp <= 0) { finishRun(); return; }
+
+        const card = state.selectedCard;
+        const targets = state.villain.targets;
+        const result = calculateDamage(card, targets);
+
+        addLog(`카드 사용: ${card.name} [숫자 ${card.number}] vs 타겟 [${targets.join(", ")}]`,
+          ["턴", `S${state.stage}`]);
+        addLog(`판정: ${result.reason}`,
+          [result.rank === "critical" ? "크리티컬" :
+           result.rank === "enhanced" ? "강화" :
+           result.rank === "normal" ? "일반" : "빗나감"]);
+
+        if (result.rank !== "miss") {
+          addLog(`데미지 계산: 기본 ${result.baseDamage} × ${result.multiplier} = ${Math.floor(result.baseDamage * result.multiplier)}` +
+            (state.player.status.weaken > 0 ? ` (약화 −25% → ${result.damage})` : ` → ${result.damage}`),
+            ["계산"]);
+        } else {
+          addLog(`빗나감: 고정 데미지 ${MISS_FIXED_DAMAGE}`, ["계산"]);
         }
 
-        let playerTurnShield = result.shield;
-        if (state.player.status.frail > 0) {
-          playerTurnShield = Math.floor(playerTurnShield * 0.65);
-          addLog("취약 상태로 보호막 35% 감소", ["디버프"]);
-        }
-
-        state.villain.shield = Math.max(0, state.villain.shield - result.shieldBreak);
-        let remainingDamage = playerDamage;
+        let remainingDamage = result.damage;
         const shieldBlocked = Math.min(state.villain.shield, remainingDamage);
         remainingDamage -= shieldBlocked;
         state.villain.shield -= shieldBlocked;
         state.villain.hp -= remainingDamage;
 
-        state.player.hp = Math.min(state.player.maxHp, state.player.hp + result.heal);
+        if (shieldBlocked > 0) {
+          addLog(`빌런 방어력으로 ${shieldBlocked} 방어, 실제 타격 ${remainingDamage}`, ["전투"]);
+        }
 
-        addLog(`플레이어 선공: [${playedCards.map((c) => c.number).join(", ")}]`, ["턴", `S${state.stage}`]);
-        const bonusSummary = result.breakdown.bonusItems.length
-          ? result.breakdown.bonusItems.map((item) => `${item.name} (${item.stat} +${item.value})`).join(" / ")
-          : "조합 보너스 없음";
-        addLog(`공격 계산식: 공격력 합 ${result.breakdown.baseDamage} + 조합 보너스 ${result.breakdown.bonusDamage} = ${result.damage}`, ["계산"]);
-        addLog(`보너스 상세: ${bonusSummary}`, ["계산"]);
-        addLog(`피해 ${playerDamage} / 보호막 ${playerTurnShield} / 회복 ${result.heal}`, ["플레이어"]);
-        addLog(`빌런 방어로 막은 피해 ${shieldBlocked}, 실제 타격 ${remainingDamage}`, ["전투"]);
-        addLog(`수학 시너지: ${result.notes.join(" | ")}`, ["수학"]);
+        if (result.shield > 0) {
+          state.player.shield += result.shield;
+          addLog(`방어막 +${result.shield} 획득 (현재 ${state.player.shield})`, ["방어"]);
+        }
 
-        renderAll();
-        await animatePlayerAttack(remainingDamage, playedCards);
-
-        removeCardsFromHand(playedCards);
-        state.selected = [];
-        draw(state.player, playedCards.length);
+        if (result.stun) {
+          state.villain.stunned = true;
+          addLog("적이 기절했습니다! 다음 턴 행동 불가!", ["크리티컬"]);
+        }
 
         renderAll();
+        await animatePlayerAttack(result, card);
+
+        discardCard(card);
+        state.selectedCard = null;
+        drawCards(1);
 
         if (state.villain.hp <= 0) {
           if (state.tutorial.active) {
@@ -1380,26 +1552,41 @@
             state.mode = "map";
             state.villain = null;
             state.currentMapChoices = rollMapChoices();
-            addLog("튜토리얼 완료! 이제 월드맵에서 길을 선택해 본 게임을 진행하세요.", ["튜토리얼"]);
+            addLog("튜토리얼 완료! 월드맵에서 길을 선택해 본 게임을 진행하세요.", ["튜토리얼"]);
           } else {
-            addLog(`${state.villain.name} 처치 성공! 보상을 선택하세요.`, ["승리"]);
+            addLog(`${state.villain.name} 처치 성공! 보상 카드를 선택하세요.`, ["승리"]);
             state.mode = "reward";
             renderRewardChoices();
           }
+          renderAll();
+          return;
+        }
+
+        if (state.villain.stunned) {
+          state.villain.stunned = false;
+          addLog("빌런이 기절 상태라 이번 턴 행동을 건너뜁니다!", ["기절"]);
         } else {
-          addLog("빌런 후공: 빌런 행동 실행", ["턴"]);
           await sleep(460);
-          const villainAction = applyVillainIntent(playerTurnShield);
+          addLog("빌런 행동 실행", ["턴"]);
+          const villainAction = applyVillainIntent();
           renderAll();
           if (villainAction && villainAction.type === "attack") {
             await animateVillainAttack(villainAction.actualDamage, villainAction.blocked);
           }
-          if (state.player.status.weaken > 0) state.player.status.weaken -= 1;
-          if (state.player.status.frail > 0) state.player.status.frail -= 1;
         }
+
+        if (state.player.status.weaken > 0) state.player.status.weaken--;
+        if (state.player.status.frail > 0) state.player.status.frail--;
+
+        if (state.tutorial.active) state.tutorial.turn++;
+
+        state.villain.targets = rollTargetNumbers(state.stage);
+        state.villain.intent = rollVillainIntent(state.villain);
+        addLog(intentText(state.villain.intent), ["빌런"]);
 
         if (state.player.hp <= 0) {
           finishRun();
+          return;
         }
       } finally {
         state.turnLocked = false;
@@ -1414,11 +1601,11 @@
         return;
       }
       state.player.hp -= 4;
-      state.player.discard.push(...state.player.hand);
-      state.player.hand = [];
-      draw(state.player, 5);
-      state.selected = [];
-      addLog("핸드 새로고침 (HP -4)", ["전략"]);
+      state.player.shield = 0;
+      discardHand();
+      drawCards(5);
+      state.selectedCard = null;
+      addLog("핸드 새로고침 (HP −4)", ["전략"]);
       renderAll();
     }
 
@@ -1426,79 +1613,287 @@
       state.mode = "gameover";
       state.runOver = true;
       addLog(`게임 오버! 최종 도달 스테이지: ${state.stage}`, ["게임오버"]);
+      renderAll();
     }
 
-    function rewardOptions() {
-      return [
-        {
-          label: "체력 회복 +14",
-          apply: () => {
-            state.player.hp = Math.min(state.player.maxHp, state.player.hp + 14);
-          }
-        },
-        {
-          label: "최대 체력 +8, 현재 체력 +8",
-          apply: () => {
-            state.player.maxHp += 8;
-            state.player.hp = Math.min(state.player.maxHp, state.player.hp + 8);
-          }
-        },
-        {
-          label: "새 카드 1장 획득",
-          apply: () => {
-            const pick = CARD_LIBRARY[Math.floor(Math.random() * CARD_LIBRARY.length)];
-            state.player.discard.push(createCardInstance(pick, state.stage));
-          }
-        },
-        {
-          label: "디버프 정화 (약화/취약/출혈 제거)",
-          apply: () => {
-            state.player.status.weaken = 0;
-            state.player.status.frail = 0;
-            state.player.status.bleed = 0;
-          }
-        },
-        {
-          label: "덱 강화: 다음 스테이지 시작 시 카드 2장 드로우",
-          apply: () => {
-            state.player.pendingStageStartDraw += 2;
-          }
-        }
-      ];
+    // ============================================================
+    //  보상 시스템 (3장 중 1장 선택 덱빌딩)
+    // ============================================================
+    function generateRewardCards() {
+      const cards = [];
+      for (let i = 0; i < 3; i++) {
+        const template = CARD_LIBRARY[Math.floor(Math.random() * CARD_LIBRARY.length)];
+        cards.push(createCardInstance(template, state.stage));
+      }
+      return cards;
     }
 
-    function pickReward(option) {
+    function renderRewardChoices() {
+      if (state.mode !== "reward") {
+        rewardAreaEl.innerHTML = "";
+        return;
+      }
+      const rewardCards = generateRewardCards();
+      const box = document.createElement("div");
+      box.className = "reward-box";
+      box.innerHTML = `
+        <strong>승리! 카드 1장을 선택하여 덱에 추가하세요</strong>
+        <div class="small" style="margin-top:4px;">
+          숫자가 클수록 기본 데미지가 높지만, 타겟과의 수학적 관계가 더 중요합니다.
+        </div>
+        <div class="reward-cards" id="rewardCardsGrid"></div>
+        <div class="btn-row">
+          <button id="skipRewardBtn">건너뛰기 (HP +8 회복)</button>
+          <button id="purgeRewardBtn">덱 압축 (카드 1장 제거)</button>
+        </div>
+      `;
+      rewardAreaEl.innerHTML = "";
+      rewardAreaEl.appendChild(box);
+
+      const grid = document.getElementById("rewardCardsGrid");
+      rewardCards.forEach(card => {
+        const el = document.createElement("div");
+        el.className = "reward-card";
+        const img = CARD_IMAGE_BY_ID[card.id] || "";
+        el.innerHTML = `
+          <div class="number">${card.number}</div>
+          <div class="card-name">${card.name}</div>
+          <div class="small">기본 데미지: ${card.baseDamage}</div>
+          ${img ? `<div class="img-placeholder" style="height:80px;margin-top:6px;"><img src="${img}" alt="${card.name}"></div>` : ""}
+        `;
+        el.addEventListener("click", () => pickRewardCard(card));
+        grid.appendChild(el);
+      });
+
+      document.getElementById("skipRewardBtn").addEventListener("click", () => {
+        state.player.hp = Math.min(state.player.maxHp, state.player.hp + 8);
+        addLog("보상 건너뛰기: HP +8 회복", ["보상"]);
+        advanceStage();
+      });
+
+      document.getElementById("purgeRewardBtn").addEventListener("click", () => {
+        openPurgeModal();
+      });
+    }
+
+    function pickRewardCard(card) {
       if (state.mode !== "reward") return;
-      option.apply();
-      addLog(`보상 획득: ${option.label}`, ["보상"]);
-      state.stage += 1;
+      addCardToDeck(card);
+      addLog(`덱에 추가: ${card.name} [숫자 ${card.number}]`, ["보상", "덱빌딩"]);
+      advanceStage();
+    }
+
+    function advanceStage() {
+      state.stage++;
       state.mode = "map";
       state.villain = null;
+      state.player.shield = 0;
       state.currentMapChoices = rollMapChoices();
       rewardAreaEl.innerHTML = "";
       renderAll();
     }
 
+    // ============================================================
+    //  덱 압축(제거) 시스템
+    // ============================================================
+    function openPurgeModal() {
+      state.swapView.open = true;
+      renderSwapModal();
+    }
+
+    function renderSwapModal() {
+      if (!swapModalEl) return;
+      if (!state.swapView.open) { swapModalEl.classList.remove("open"); return; }
+      swapModalEl.classList.add("open");
+
+      const totalCards = state.player.deck.length + state.player.hand.length + state.player.discard.length;
+      if (swapCountSummaryEl) {
+        swapCountSummaryEl.textContent = `현재 덱 총 ${totalCards}장`;
+      }
+
+      const allCards = [
+        ...state.player.hand.map(c => ({ card: c, pile: "손패" })),
+        ...state.player.deck.map(c => ({ card: c, pile: "덱" })),
+        ...state.player.discard.map(c => ({ card: c, pile: "버린 더미" }))
+      ].sort((a, b) => a.card.number - b.card.number);
+
+      if (!swapItemListEl) return;
+      if (totalCards <= 5) {
+        swapItemListEl.innerHTML = `<div class="pile-card">덱이 5장 이하라 더 이상 제거할 수 없습니다.</div>`;
+        return;
+      }
+
+      swapItemListEl.innerHTML = allCards.map(({ card, pile }) => `
+        <button type="button" class="swap-item" data-purge-uid="${card.uid}">
+          <span>
+            <strong>${card.name}</strong>
+            <small>${pile} · 숫자 ${card.number} · 기본 데미지 ${card.baseDamage}</small>
+          </span>
+          <span style="color:var(--danger);">제거</span>
+        </button>
+      `).join("");
+
+      swapItemListEl.querySelectorAll("[data-purge-uid]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const removed = removeCardPermanently(btn.dataset.purgeUid);
+          if (removed) {
+            addLog(`덱에서 제거: ${removed.name} [숫자 ${removed.number}]`, ["덱빌딩", "압축"]);
+            state.swapView.open = false;
+            if (state.mode === "reward") advanceStage();
+            else renderAll();
+          }
+        });
+      });
+    }
+
+    // ============================================================
+    //  월드맵
+    // ============================================================
+    function rollMapChoices() {
+      const names = ["잊힌 숲길", "붉은 협곡", "안개 성채", "마력 균열", "하늘 회랑"];
+      const types = ["aggressive", "defensive", "hexer"];
+      const boons = ["입장 시 HP +6", "입장 시 카드 1장 드로우", "입장 시 방어막 +5"];
+      const choices = [];
+      for (let i = 0; i < 3; i++) {
+        choices.push({
+          id: `route_${i}`,
+          title: names[Math.floor(Math.random() * names.length)],
+          type: types[Math.floor(Math.random() * types.length)],
+          boon: boons[Math.floor(Math.random() * boons.length)]
+        });
+      }
+      return choices;
+    }
+
+    function applyMapBoon(boonText) {
+      if (boonText.includes("HP +6")) {
+        state.player.hp = Math.min(state.player.maxHp, state.player.hp + 6);
+      } else if (boonText.includes("방어막 +5")) {
+        state.player.shield += 5;
+      } else {
+        drawCards(1);
+      }
+      addLog(`길 보너스 적용: ${boonText}`, ["월드맵"]);
+    }
+
+    function choosePath(choice) {
+      if (state.mode !== "map" || state.runOver) return;
+      state.node++;
+      applyMapBoon(choice.boon);
+      state.villain = buildVillain(choice.type);
+      state.mode = "battle";
+      state.selectedCard = null;
+      state.player.shield = 0;
+
+      discardHand();
+      drawCards(5);
+
+      addLog(`스테이지 ${state.stage} 전투 시작: ${state.villain.name}`, ["전투"]);
+      addLog(`타겟 숫자: [${state.villain.targets.join(", ")}]`, ["타겟"]);
+      addLog(intentText(state.villain.intent), ["빌런"]);
+      renderAll();
+    }
+
+    // ============================================================
+    //  렌더링
+    // ============================================================
+    function getCardImagePath(card) {
+      return CARD_IMAGE_BY_ID[card.id] || "";
+    }
+
+    function getVillainImagePath(villain) {
+      if (!villain) return "";
+      return VILLAIN_IMAGE_BY_NAME[villain.name] || "";
+    }
+
+    function sortCardsForView(cards, sortMode) {
+      const copy = [...cards];
+      if (sortMode === "number_asc") return copy.sort((a, b) => a.number - b.number);
+      if (sortMode === "name_asc") return copy.sort((a, b) => a.name.localeCompare(b.name, "ko"));
+      if (sortMode === "name_desc") return copy.sort((a, b) => b.name.localeCompare(a.name, "ko"));
+      return copy.sort((a, b) => b.number - a.number);
+    }
+
+    function renderPileCards(targetEl, cards) {
+      if (!targetEl) return;
+      if (!cards.length) {
+        targetEl.innerHTML = "<div class='pile-card'>없음</div>";
+        return;
+      }
+      targetEl.innerHTML = cards.map(card => `
+        <div class="pile-card">
+          <span>${card.name}</span>
+          <span>숫자 ${card.number} / 데미지 ${card.baseDamage}</span>
+        </div>
+      `).join("");
+    }
+
+    function renderDeckModal() {
+      if (!deckModalEl) return;
+      if (!state.deckView.open) { deckModalEl.classList.remove("open"); return; }
+      deckModalEl.classList.add("open");
+      const sm = state.deckView.sortMode;
+      renderPileCards(drawPileCardsEl, sortCardsForView(state.player.deck, sm));
+      renderPileCards(discardPileCardsEl, sortCardsForView(state.player.discard, sm));
+      renderPileCards(ownedPileCardsEl, sortCardsForView(
+        [...state.player.deck, ...state.player.hand, ...state.player.discard], sm
+      ));
+      if (deckCountSummaryEl) {
+        const total = state.player.deck.length + state.player.discard.length + state.player.hand.length;
+        deckCountSummaryEl.textContent = `덱 ${state.player.deck.length}장 / 버린더미 ${state.player.discard.length}장 / 손패 ${state.player.hand.length}장 / 총 ${total}장`;
+      }
+      if (deckSortSelectEl) deckSortSelectEl.value = sm;
+    }
+
+    function statusChipItems(statusObj) {
+      if (!statusObj) return [];
+      const items = [];
+      if (statusObj.weaken > 0)
+        items.push({ key: "weaken", cls: "weaken", label: `약화 ${statusObj.weaken}턴`, desc: "공격 시 최종 피해가 25% 감소합니다." });
+      if (statusObj.frail > 0)
+        items.push({ key: "frail", cls: "frail", label: `취약 ${statusObj.frail}턴`, desc: "이번 턴에 얻는 방어막이 35% 감소합니다." });
+      if (statusObj.bleed > 0)
+        items.push({ key: "bleed", cls: "bleed", label: `출혈 ${statusObj.bleed}턴`, desc: "내 턴 시작 시 2 피해를 받고, 출혈 턴이 1 감소합니다." });
+      return items;
+    }
+
+    function renderStatusEffects(targetEl, statusObj) {
+      if (!targetEl) return;
+      const items = statusChipItems(statusObj);
+      if (!items.length) { targetEl.innerHTML = ""; targetEl.dataset.activeStatus = ""; return; }
+      const activeKey = targetEl.dataset.activeStatus || "";
+      const activeItem = items.find(i => i.key === activeKey);
+      const chipHtml = items.map(i =>
+        `<button type="button" class="status-chip ${i.cls} ${activeKey === i.key ? "active" : ""}" data-status-key="${i.key}">${i.label}</button>`
+      ).join("");
+      const tipHtml = activeItem ? `<div class="status-tip">${activeItem.desc}</div>` : "";
+      targetEl.innerHTML = chipHtml + tipHtml;
+      targetEl.querySelectorAll("[data-status-key]").forEach(chipBtn => {
+        chipBtn.addEventListener("click", () => {
+          const ck = chipBtn.dataset.statusKey || "";
+          targetEl.dataset.activeStatus = activeKey === ck ? "" : ck;
+          renderStatusEffects(targetEl, statusObj);
+        });
+      });
+    }
+
     function renderMap() {
-      if (state.tutorial.active) {
+      if (state.tutorial.active && state.mode === "battle") {
         mapAreaEl.innerHTML = `
           <div class="reward-box">
             <strong>튜토리얼 스테이지</strong>
-            <div class="desc">이번 전투에서는 빌런에게 가해지는 피해 계산을 연습합니다.</div>
+            <div class="desc">카드의 숫자와 타겟 숫자의 수학적 관계를 확인해보세요!</div>
             <div class="ability">
-              1) 카드 1~3장 선택<br>
-              2) 선택 장수별 조합 보너스 확인<br>
-              3) 턴 진행 후 로그에서 계산식 확인
+              1) 타겟 숫자를 확인<br>
+              2) 손패에서 카드 1장 선택<br>
+              3) 약수/배수, 최대공약수/최소공배수 관계를 분석<br>
+              4) 카드 사용으로 턴 진행
             </div>
           </div>
         `;
         return;
       }
-      if (state.mode !== "map") {
-        mapAreaEl.innerHTML = "";
-        return;
-      }
-      const choices = state.currentMapChoices;
+      if (state.mode !== "map") { mapAreaEl.innerHTML = ""; return; }
       mapAreaEl.innerHTML = `
         <div class="reward-box">
           <strong>월드맵 길 선택 (스테이지 ${state.stage})</strong>
@@ -1506,12 +1901,12 @@
         </div>
       `;
       const grid = document.getElementById("mapGrid");
-      choices.forEach((choice) => {
+      state.currentMapChoices.forEach(choice => {
         const item = document.createElement("div");
         item.className = "map-node";
         item.innerHTML = `
           <div class="name">${choice.title}</div>
-          <div class="desc">적 성향: ${choice.type}</div>
+          <div class="desc">적 성향: ${pathTypeLabelKo(choice.type)}</div>
           <div class="ability">입장 보너스: ${choice.boon}</div>
           <button style="margin-top:8px;">이 길 선택</button>
         `;
@@ -1521,17 +1916,14 @@
     }
 
     function renderVillain() {
-      if (!state.villain || state.mode === "map") {
-        villainAreaEl.innerHTML = "";
-        return;
-      }
-      const villainImage = getVillainImagePath(state.villain);
+      if (!state.villain || state.mode === "map") { villainAreaEl.innerHTML = ""; return; }
+      const v = state.villain;
+      const villainImage = getVillainImagePath(v);
+
       villainAreaEl.innerHTML = `
         <div class="villain-box">
           <div class="img-placeholder" id="villainPortrait">
-            ${villainImage
-              ? `<img src="${villainImage}" alt="${state.villain.name}">`
-              : "빌런 이미지<br>준비중"}
+            ${villainImage ? `<img src="${villainImage}" alt="${v.name}">` : "빌런 이미지<br>준비중"}
           </div>
           <div>
             <div class="hp-panel" id="villainHpPanel">
@@ -1542,93 +1934,64 @@
               <div class="hp-track">
                 <div class="hp-fill villain" id="villainHpBar"></div>
               </div>
+              <div id="villainStatusEffects" class="status-effects"></div>
             </div>
-            <div class="name">${state.villain.name}</div>
+            <div class="name">${v.name}${v.stunned ? ' <span style="color:var(--critical);">[기절]</span>' : ''}</div>
             <div class="meta">
-              <span>방어력 ${state.villain.shield}</span>
+              <span>방어력 ${v.shield}</span>
             </div>
-            <div class="desc">${state.villain.desc}</div>
-            <div class="intent">${intentText(state.villain.intent)}</div>
+            <div class="desc">${v.desc}</div>
+            <div class="target-numbers">
+              <div class="label">이번 턴 타겟 숫자</div>
+              <div class="nums">
+                ${v.targets.map(t => `<div class="target-num">${t}</div>`).join("")}
+              </div>
+            </div>
+            <div class="intent">${v.stunned ? "기절 상태 (행동 불가)" : intentText(v.intent)}</div>
           </div>
         </div>
       `;
     }
 
-    function renderRewardChoices() {
-      if (state.mode !== "reward") {
-        rewardAreaEl.innerHTML = "";
-        return;
-      }
-      const options = shuffle(rewardOptions()).slice(0, 3);
-      const box = document.createElement("div");
-      box.className = "reward-box";
-      box.innerHTML = "<strong>승리 보상 선택</strong>";
-
-      options.forEach((option) => {
-        const btn = document.createElement("button");
-        btn.textContent = option.label;
-        btn.style.marginLeft = "6px";
-        btn.addEventListener("click", () => pickReward(option));
-        box.appendChild(btn);
-      });
-
-      rewardAreaEl.innerHTML = "";
-      rewardAreaEl.appendChild(box);
-    }
-
     function renderHand() {
       handCardsEl.innerHTML = "";
-      state.player.hand.forEach((card) => {
+      state.player.hand.forEach(card => {
         const cardEl = document.createElement("article");
         cardEl.className = "card";
         cardEl.dataset.uid = card.uid;
         const cardImage = getCardImagePath(card);
-        if (state.selected.some((sel) => sel.uid === card.uid)) {
+        if (state.selectedCard && state.selectedCard.uid === card.uid) {
           cardEl.classList.add("selected");
         }
+
+        let relationHint = "";
+        if (state.villain && state.villain.targets.length > 0) {
+          const eval_ = evaluateCardVsTargets(card.number, state.villain.targets);
+          const colors = { critical: "var(--critical)", enhanced: "var(--accent)", normal: "var(--good)", miss: "var(--muted)" };
+          const labels = { critical: "크리티컬", enhanced: "강화", normal: "일반", miss: "빗나감" };
+          relationHint = `<div style="font-size:0.72rem;color:${colors[eval_.rank]};font-weight:700;margin-top:3px;">[${labels[eval_.rank]}]</div>`;
+        }
+
         cardEl.innerHTML = `
           <div class="img-placeholder">
-            ${cardImage
-              ? `<img src="${cardImage}" alt="${card.name}">`
-              : "이미지 준비중"}
+            ${cardImage ? `<img src="${cardImage}" alt="${card.name}">` : "이미지 준비중"}
           </div>
           <div>
             <div class="name">${card.name}</div>
             <div class="meta">
-              <span>숫자 ${card.number}</span>
-              <span>공격력 ${cardAttackPower(card)}</span>
+              <span>숫자 <strong class="hand-stat-num">${card.number}</strong></span>
+              <span>데미지 <strong class="hand-stat-num">${card.baseDamage}</strong></span>
             </div>
             <div class="desc">${card.desc}</div>
-            <div class="ability">특수: ${card.abilityText}</div>
+            ${relationHint}
           </div>
         `;
         cardEl.addEventListener("click", () => {
           if (state.mode !== "battle") return;
-          const exists = state.selected.find((sel) => sel.uid === card.uid);
-          if (exists) {
-            state.selected = state.selected.filter((sel) => sel.uid !== card.uid);
-          } else if (state.selected.length < 3) {
-            const nextSelected = [...state.selected, card];
-            if (nextSelected.length === 1) {
-              state.selected = nextSelected;
-            } else if (nextSelected.length === 2) {
-              const twoEval = evaluatePlayerSelection(nextSelected);
-              if (twoEval.breakdown.hasValidBonus || canCompleteToValidThree(nextSelected)) {
-                state.selected = nextSelected;
-                if (!twoEval.breakdown.hasValidBonus) {
-                  addLog("현재 2장만으로는 보너스가 성립하지 않습니다. 3장 조합으로 완성해보세요.", ["안내"]);
-                }
-              } else {
-                addLog("이 2장 조합은 보너스가 성립하지 않아 선택할 수 없습니다. 1장만 내거나 다른 조합을 선택하세요.", ["알림"]);
-              }
-            } else {
-              const threeEval = evaluatePlayerSelection(nextSelected);
-              if (threeEval.breakdown.hasValidBonus) {
-                state.selected = nextSelected;
-              } else {
-                addLog("이 3장 조합은 보너스가 성립하지 않아 선택할 수 없습니다.", ["알림"]);
-              }
-            }
+          if (state.selectedCard && state.selectedCard.uid === card.uid) {
+            state.selectedCard = null;
+          } else {
+            state.selectedCard = card;
           }
           renderHand();
           renderCalcGuide();
@@ -1638,59 +2001,81 @@
     }
 
     function renderCalcGuide() {
-      if (state.mode !== "battle" || state.selected.length < 1) {
-        calcAreaEl.innerHTML = "카드 1~3장을 선택하면 이번 턴 예상 공격 계산이 표시됩니다.";
+      if (state.mode !== "battle" || !state.selectedCard || !state.villain) {
+        calcAreaEl.innerHTML = "카드를 선택하면 타겟 숫자와의 수학적 관계 분석이 표시됩니다.";
         return;
       }
-      const selectedCards = [...state.selected];
-      const result = evaluatePlayerSelection(selectedCards);
-      const bonusLines = result.breakdown.bonusItems.length
-        ? result.breakdown.bonusItems.map((item) => `${item.name}: ${item.stat} +${item.value}`).join("<br>")
-        : "조합 보너스 없음";
-      const validityText = selectedCards.length > 1 && !result.breakdown.hasValidBonus
-        ? "<span style='color:#ff9fbf'>현재 조합은 보너스 미성립: 1장만 낼 수 있습니다.</span><br>"
-        : "";
+      const card = state.selectedCard;
+      const targets = state.villain.targets;
+      const result = calculateDamage(card, targets);
+
+      const rankColors = { critical: "var(--critical)", enhanced: "var(--accent)", normal: "var(--good)", miss: "var(--muted)" };
+      const rankLabels = { critical: "크리티컬 (×3)", enhanced: "강화 (×1.5)", normal: "일반 (×1)", miss: "빗나감" };
+
+      let gcdInfo = "", lcmInfo = "";
+      if (targets.length === 1) {
+        gcdInfo = `최대공약수(${card.number}, ${targets[0]}) = ${getGCD(card.number, targets[0])}`;
+        lcmInfo = `최소공배수(${card.number}, ${targets[0]}) = ${getLCM(card.number, targets[0])}`;
+      } else {
+        gcdInfo = `최대공약수(${targets.join(", ")}) = ${getGCDArray(targets)}`;
+        lcmInfo = `최소공배수(${targets.join(", ")}) = ${getLCMArray(targets)}`;
+      }
+
       calcAreaEl.innerHTML = `
-        <strong>이번 턴 예상 공격 계산</strong><br>
-        선택 카드(${result.breakdown.count}장): ${result.breakdown.numbers.join(", ")}<br>
-        공격력 합 = ${result.breakdown.baseDamage}<br>
-        조합 보너스 합 = ${result.breakdown.bonusDamage}<br>
-        예상 보호막 = ${result.shield}<br>
-        ${validityText}
-        ${bonusLines}<br>
-        <strong>합계 예상 피해 = ${result.damage}</strong>
+        <strong>수학적 관계 분석</strong><br>
+        카드 숫자: <strong>${card.number}</strong> | 타겟: <strong>[${targets.join(", ")}]</strong><br>
+        ${gcdInfo}<br>
+        ${lcmInfo}<br>
+        <hr style="border-color:rgba(255,255,255,0.1);margin:6px 0;">
+        <span style="color:${rankColors[result.rank]};font-weight:700;">[${rankLabels[result.rank]}]</span><br>
+        ${result.reason}<br>
+        <hr style="border-color:rgba(255,255,255,0.1);margin:6px 0;">
+        예상 데미지: <strong>${result.damage}</strong>${result.shield > 0 ? ` | 방어막: +${result.shield}` : ""}${result.stun ? " | 기절 부여!" : ""}
       `;
     }
 
     function toggleDeckModal(forceOpen) {
-      const nextOpen = typeof forceOpen === "boolean" ? forceOpen : !state.deckView.open;
-      state.deckView.open = nextOpen;
+      state.deckView.open = typeof forceOpen === "boolean" ? forceOpen : !state.deckView.open;
       renderDeckModal();
     }
 
     function updateTop() {
       stageTextEl.textContent = state.tutorial.active ? "튜토리얼" : state.stage;
       nodeTextEl.textContent = state.node;
-      playerHpTextEl.textContent = `${Math.max(0, state.player.hp)} / ${state.player.maxHp}`;
-      const playerHpPct = Math.max(0, Math.min(100, (state.player.hp / state.player.maxHp) * 100));
+
+      const shieldText = state.player.shield > 0 ? ` (방어막 ${state.player.shield})` : "";
+      playerHpTextEl.textContent = `${Math.max(0, state.player.hp)} / ${state.player.maxHp}${shieldText}`;
+      const playerHpPct = clamp((state.player.hp / state.player.maxHp) * 100, 0, 100);
       playerHpBarEl.style.width = `${playerHpPct}%`;
+      renderStatusEffects(playerStatusEffectsEl, state.player.status);
 
       const villainHpTextEl = document.getElementById("villainHpText");
       const villainHpBarEl = document.getElementById("villainHpBar");
+      const villainStatusEffectsEl = document.getElementById("villainStatusEffects");
       if (villainHpTextEl && villainHpBarEl) {
         if (state.villain) {
           villainHpTextEl.textContent = `${Math.max(0, state.villain.hp)} / ${state.villain.maxHp}`;
-          const villainHpPct = Math.max(0, Math.min(100, (state.villain.hp / state.villain.maxHp) * 100));
-          villainHpBarEl.style.width = `${villainHpPct}%`;
+          const vPct = clamp((state.villain.hp / state.villain.maxHp) * 100, 0, 100);
+          villainHpBarEl.style.width = `${vPct}%`;
+          renderStatusEffects(villainStatusEffectsEl, state.villain.status);
         } else {
           villainHpTextEl.textContent = "- / -";
           villainHpBarEl.style.width = "0%";
+          renderStatusEffects(villainStatusEffectsEl, null);
         }
       }
-      statusLineEl.textContent = getStatusText();
+
+      const s = state.player.status;
+      const parts = [];
+      if (s.weaken > 0) parts.push(`약화 ${s.weaken}턴`);
+      if (s.frail > 0) parts.push(`취약 ${s.frail}턴`);
+      if (s.bleed > 0) parts.push(`출혈 ${s.bleed}턴`);
+      statusLineEl.textContent = parts.length ? `상태: ${parts.join(" / ")}` : "상태: 정상";
+
       if (deckStatusEl) {
-        deckStatusEl.textContent = `덱 남음 ${state.player.deck.length}장 | 사용 더미 ${state.player.discard.length}장 | 손패 ${state.player.hand.length}장`;
+        deckStatusEl.textContent = `덱 ${state.player.deck.length}장 | 버린 더미 ${state.player.discard.length}장 | 손패 ${state.player.hand.length}장 | 방어막 ${state.player.shield}`;
       }
+
       const inBattle = state.mode === "battle" && !state.runOver && !state.turnLocked;
       playBtnEl.disabled = !inBattle;
       rerollBtnEl.disabled = !inBattle;
@@ -1704,17 +2089,24 @@
       renderCalcGuide();
       updateTop();
       renderDeckModal();
+      renderSwapModal();
     }
 
+    // ============================================================
+    //  튜토리얼 & 새 게임
+    // ============================================================
     function setupTutorialBattle() {
       const tutorialVillain = {
         name: "훈련용 빌런 골렘",
-        desc: "전투 계산을 학습하기 위한 연습 상대.",
+        desc: "전투 계산을 학습하기 위한 연습 상대. 타겟 숫자와 카드의 관계를 확인해보세요!",
         style: "tutorial",
-        maxHp: 36,
-        hp: 36,
+        maxHp: 30,
+        hp: 30,
         shield: 0,
-        intent: tutorialVillainIntentByTurn(1)
+        targets: [6, 12],
+        intent: tutorialVillainIntentByTurn(1),
+        stunned: false,
+        status: { weaken: 0, frail: 0, bleed: 0 }
       };
       state.mode = "battle";
       state.villain = tutorialVillain;
@@ -1722,9 +2114,11 @@
       state.node = 0;
       state.tutorial.active = true;
       state.tutorial.turn = 1;
-      state.selected = [];
+      state.selectedCard = null;
 
-      addLog("튜토리얼 시작: 시작 덱(12장)에서 받은 손패(5장)로 조합 보너스를 확인하세요.", ["튜토리얼"]);
+      addLog("튜토리얼: 타겟 숫자 [6, 12]가 제시되었습니다.", ["튜토리얼"]);
+      addLog("힌트: 최대공약수(6,12)=6, 최소공배수(6,12)=12. 숫자 6이나 12 카드를 내면 크리티컬!", ["튜토리얼"]);
+      addLog("숫자 2, 3, 4 등을 내면 약수 관계로 강화/일반 공격이 됩니다.", ["튜토리얼"]);
       addLog(intentText(state.villain.intent), ["빌런"]);
     }
 
@@ -1732,21 +2126,23 @@
       state.stage = 1;
       state.node = 0;
       state.mode = "battle";
-      state.selected = [];
+      state.selectedCard = null;
       state.currentMapChoices = rollMapChoices();
       state.runOver = false;
       state.villain = null;
 
-      state.player.hp = 72;
-      state.player.maxHp = 72;
-      state.player.deck = createDeck(12, 1);
+      state.player.hp = 80;
+      state.player.maxHp = 80;
+      state.player.shield = 0;
+      state.player.deck = createInitialDeck();
       state.player.discard = [];
       state.player.hand = [];
-      state.player.pendingStageStartDraw = 0;
       state.player.status = { weaken: 0, frail: 0, bleed: 0 };
       state.deckView.open = false;
       state.deckView.sortMode = "number_desc";
-      draw(state.player, 5);
+      state.swapView.open = false;
+
+      drawCards(5);
 
       logBoxEl.innerHTML = "";
       addLog("새로운 원정 시작!", ["시작"]);
@@ -1754,44 +2150,43 @@
       renderAll();
     }
 
+    // ============================================================
+    //  이벤트 바인딩
+    // ============================================================
     playBtnEl.addEventListener("click", doTurn);
     rerollBtnEl.addEventListener("click", rerollHand);
     newRunBtnEl.addEventListener("click", newRun);
     deckViewBtnEl.addEventListener("click", () => toggleDeckModal(true));
     closeDeckModalBtnEl.addEventListener("click", () => toggleDeckModal(false));
-    deckModalEl.addEventListener("click", (event) => {
-      if (event.target === deckModalEl) {
-        toggleDeckModal(false);
-      }
+    closeSwapModalBtnEl.addEventListener("click", () => {
+      state.swapView.open = false;
+      renderSwapModal();
     });
+    deckModalEl.addEventListener("click", e => { if (e.target === deckModalEl) toggleDeckModal(false); });
+    swapModalEl.addEventListener("click", e => { if (e.target === swapModalEl) { state.swapView.open = false; renderSwapModal(); } });
     deckSortSelectEl.addEventListener("change", () => {
       state.deckView.sortMode = deckSortSelectEl.value;
       renderDeckModal();
     });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && state.deckView.open) {
-        toggleDeckModal(false);
-      }
-      if ((event.key === "d" || event.key === "D") && !event.ctrlKey && !event.metaKey) {
-        const targetTag = event.target && event.target.tagName ? event.target.tagName.toLowerCase() : "";
-        if (targetTag !== "input" && targetTag !== "textarea" && targetTag !== "select") {
-          toggleDeckModal();
-        }
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && state.deckView.open) toggleDeckModal(false);
+      if (e.key === "Escape" && state.swapView.open) { state.swapView.open = false; renderSwapModal(); }
+      if ((e.key === "d" || e.key === "D") && !e.ctrlKey && !e.metaKey) {
+        const tag = e.target?.tagName?.toLowerCase() || "";
+        if (tag !== "input" && tag !== "textarea" && tag !== "select") toggleDeckModal();
       }
     });
     bgmToggleBtnEl.addEventListener("click", async () => {
-      if (bgmAudio.paused) {
-        await playBgm();
-      } else {
-        pauseBgm();
-      }
+      if (bgmAudio.paused) await playBgm(); else pauseBgm();
     });
     bgmVolumeRangeEl.addEventListener("input", () => {
-      const volume = Number(bgmVolumeRangeEl.value) / 100;
-      bgmAudio.volume = Math.max(0, Math.min(1, volume));
+      bgmAudio.volume = clamp(Number(bgmVolumeRangeEl.value) / 100, 0, 1);
       updateBgmButtonLabel();
     });
 
+    // ============================================================
+    //  초기 실행
+    // ============================================================
     newRun();
     hookBgmUnlock();
     playBgm();
