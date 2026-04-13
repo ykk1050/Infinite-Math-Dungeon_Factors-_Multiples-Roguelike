@@ -48,7 +48,7 @@
     .topbar {
       grid-column: 1 / -1;
       display: grid;
-      grid-template-columns: 1fr auto auto auto;
+      grid-template-columns: 1fr auto auto auto auto;
       gap: 12px;
       align-items: center;
     }
@@ -349,6 +349,150 @@
       margin-top: 10px;
     }
 
+    .btn-ranking {
+      background: linear-gradient(90deg, #2980b9, #3498db);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.15s;
+      white-space: nowrap;
+    }
+    .btn-ranking:hover { filter: brightness(1.15); }
+
+    .ranking-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,5,15,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 190;
+      padding: 18px;
+      backdrop-filter: blur(4px);
+    }
+    .ranking-modal-overlay.open { display: flex; }
+    .ranking-modal-box {
+      background: linear-gradient(160deg, #0e1225 0%, #1a1e3a 60%, #12102a 100%);
+      border: 1px solid rgba(125,249,255,0.2);
+      border-radius: 16px;
+      padding: 24px 20px;
+      max-width: 640px;
+      width: 95vw;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 0 40px rgba(41,128,185,0.25);
+    }
+    .ranking-modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .ranking-modal-top h3 { margin: 0; color: #7df9ff; }
+    .ranking-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .ranking-tab {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: #d0d4e8;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .ranking-tab.active {
+      background: rgba(125,249,255,0.15);
+      border-color: rgba(125,249,255,0.4);
+      color: #7df9ff;
+      font-weight: 700;
+    }
+    .ranking-tab:hover { border-color: rgba(125,249,255,0.3); }
+    .my-record-panel {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 6px 14px;
+      font-size: 0.85rem;
+      color: #d0d4e8;
+    }
+    .my-record-panel .mr-label { color: rgba(255,255,255,0.5); font-size: 0.78rem; }
+    .my-record-panel .mr-value { font-weight: 700; font-size: 1rem; }
+
+    .ranking-search-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .ranking-search-bar input {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 7px 12px;
+      color: #fff;
+      font-size: 0.85rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .ranking-search-bar input:focus {
+      border-color: rgba(125,249,255,0.5);
+      box-shadow: 0 0 6px rgba(125,249,255,0.15);
+    }
+    .ranking-search-result-card {
+      background: rgba(125,249,255,0.06);
+      border: 1px solid rgba(125,249,255,0.2);
+      border-radius: 10px;
+      padding: 10px 14px;
+      margin-bottom: 12px;
+      font-size: 0.84rem;
+      color: #d0d4e8;
+    }
+    .ranking-search-result-card .sr-rank {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #7df9ff;
+    }
+    .ranking-search-result-card .sr-nick {
+      font-weight: 700;
+      color: #e8c8a0;
+    }
+    .ranking-search-result-card .sr-stats {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+    }
+    .ranking-search-result-card .sr-deck-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 4px 10px;
+      color: #7df9ff;
+      font-size: 0.78rem;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 6px;
+    }
+    .ranking-search-result-card .sr-deck-btn:hover {
+      background: rgba(125,249,255,0.12);
+    }
+
     .audio-controls {
       display: flex;
       align-items: center;
@@ -544,10 +688,12 @@
       background: linear-gradient(160deg, #1a0a0a 0%, #2a0c0c 60%, #180a1a 100%);
       border: 2px solid rgba(220, 50, 50, 0.55);
       border-radius: 18px;
-      padding: 44px 52px 40px;
+      padding: 44px 36px 40px;
       text-align: center;
-      max-width: 420px;
-      width: 90vw;
+      max-width: 520px;
+      width: 92vw;
+      max-height: 90vh;
+      overflow-y: auto;
       box-shadow: 0 0 60px rgba(200, 20, 20, 0.35), 0 20px 50px rgba(0,0,0,0.7);
       animation: goPopIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -616,6 +762,155 @@
       filter: brightness(1.15);
       transform: translateY(-2px);
     }
+
+    .gameover-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 14px;
+      text-align: left;
+      margin: 14px 0 18px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.85rem;
+      color: #d0d4e8;
+    }
+    .gameover-stats .stat-label { color: rgba(255,255,255,0.5); }
+    .gameover-stats .stat-value { text-align: right; font-weight: 700; }
+
+    .gameover-nick-area {
+      margin: 12px 0 8px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+    }
+    .gameover-nick-area input {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 8px;
+      padding: 9px 12px;
+      color: #fff;
+      font-size: 0.92rem;
+      font-family: inherit;
+      width: 160px;
+      outline: none;
+    }
+    .gameover-nick-area input:focus {
+      border-color: rgba(255,180,80,0.6);
+      box-shadow: 0 0 8px rgba(255,180,80,0.2);
+    }
+    .gameover-btn-rank {
+      background: linear-gradient(90deg, #e67e22, #f39c12);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 16px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.15s;
+      white-space: nowrap;
+    }
+    .gameover-btn-rank:hover { filter: brightness(1.15); }
+    .gameover-btn-rank:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .gameover-rank-msg {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 6px;
+      min-height: 1.2em;
+    }
+
+    .ranking-table-wrap {
+      margin-top: 14px;
+      max-height: 260px;
+      overflow-y: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.2);
+    }
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      color: #d0d4e8;
+    }
+    .ranking-table th {
+      position: sticky;
+      top: 0;
+      background: rgba(30,20,40,0.95);
+      padding: 7px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      font-weight: 700;
+      color: #e8c8a0;
+      text-align: center;
+    }
+    .ranking-table td {
+      padding: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .ranking-table tr:hover td {
+      background: rgba(255,255,255,0.04);
+    }
+    .ranking-table .nick-cell {
+      cursor: pointer;
+      color: #7df9ff;
+      text-decoration: underline;
+      text-decoration-color: rgba(125,249,255,0.3);
+    }
+    .ranking-table .nick-cell:hover {
+      color: #fff;
+    }
+
+    .deck-preview-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,5,15,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 210;
+      padding: 18px;
+    }
+    .deck-preview-modal.open { display: flex; }
+    .deck-preview-content {
+      background: #181b33;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 14px;
+      padding: 16px;
+      max-width: 600px;
+      width: 95vw;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .deck-preview-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .deck-preview-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .deck-preview-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 0.78rem;
+      color: #d0d4e8;
+    }
+    .deck-preview-card .dp-name { font-weight: 700; color: #e8c8a0; }
+    .deck-preview-card .dp-num { color: #7df9ff; }
+    .deck-preview-card .dp-skill { color: #c8a0e8; font-size: 0.72rem; }
 
     .deck-modal-content {
       width: min(980px, 95vw);
@@ -1157,6 +1452,7 @@
   <div class="wrap">
     <section class="topbar panel">
       <div class="title">무한 수학 던전: 약수와 배수 로그라이크</div>
+      <button id="openRankingBtn" class="btn-ranking">🏆 랭킹 · 기록</button>
       <div class="audio-controls">
         <button id="bgmToggleBtn">배경음악 재생</button>
         <label for="bgmVolumeRange">볼륨</label>
@@ -1215,7 +1511,7 @@
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00015</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00016</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -1275,16 +1571,58 @@
     </div>
   </div>
 
+  <!-- 랭킹 · 기록 모달 -->
+  <div id="rankingModalOverlay" class="ranking-modal-overlay">
+    <div class="ranking-modal-box">
+      <div class="ranking-modal-top">
+        <h3>🏆 랭킹 · 내 기록</h3>
+        <button id="closeRankingModalBtn" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;">닫기</button>
+      </div>
+      <div id="myRecordPanel" class="my-record-panel"></div>
+      <div class="ranking-tabs" id="rankingTabs">
+        <button class="ranking-tab active" data-sort="stage">스테이지</button>
+        <button class="ranking-tab" data-sort="chains">체인 횟수</button>
+        <button class="ranking-tab" data-sort="criticals">크리티컬</button>
+        <button class="ranking-tab" data-sort="enhanced">강화 공격</button>
+        <button class="ranking-tab" data-sort="normals">일반 공격</button>
+      </div>
+      <div class="ranking-search-bar">
+        <input id="rankingSearchInput" type="text" maxlength="12" placeholder="닉네임 검색...">
+        <button id="rankingSearchBtn" class="gameover-btn-rank" style="padding:7px 14px;font-size:0.82rem;">검색</button>
+      </div>
+      <div id="rankingSearchResult"></div>
+      <div id="rankingTableArea"></div>
+    </div>
+  </div>
+
   <!-- 게임오버 모달 -->
   <div id="gameOverModal" class="gameover-overlay" style="display:none;">
     <div class="gameover-modal">
       <div class="gameover-skull">💀</div>
       <h2 class="gameover-title">GAME OVER</h2>
       <div id="gameOverStage" class="gameover-stage"></div>
-      <div id="gameOverMsg" class="gameover-msg"></div>
-      <div class="gameover-buttons">
+      <div id="gameOverStats" class="gameover-stats"></div>
+      <div class="gameover-nick-area">
+        <input id="gameOverNickInput" type="text" maxlength="12" placeholder="닉네임 입력 (2~12자)">
+        <button id="gameOverSubmitRank" class="gameover-btn-rank">랭킹 등록</button>
+      </div>
+      <div id="gameOverRankMsg" class="gameover-rank-msg"></div>
+      <div id="gameOverRankingArea"></div>
+      <div class="gameover-buttons" style="margin-top:10px;">
+        <button id="gameOverViewRanking" class="gameover-btn-rank" style="background:linear-gradient(90deg,#2980b9,#3498db);">🏆 랭킹 보기</button>
         <button id="gameOverNewRunBtn" class="gameover-btn-main">새 게임 시작</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 덱 미리보기 모달 (랭킹용) -->
+  <div id="deckPreviewModal" class="deck-preview-modal">
+    <div class="deck-preview-content">
+      <div class="deck-preview-top">
+        <h3 id="deckPreviewTitle" style="margin:0;color:#e8c8a0;">덱 구성</h3>
+        <button id="closeDeckPreviewBtn" style="background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;">닫기</button>
+      </div>
+      <div id="deckPreviewCards" class="deck-preview-cards"></div>
     </div>
   </div>
 
@@ -1747,6 +2085,7 @@
       swapView: { open: false },
       villain: null,
       runOver: false,
+      stats: { chains: 0, criticals: 0, enhanced: 0, normals: 0 },
       turn: {
         ap: BASE_AP,
         maxAp: BASE_AP,
@@ -2996,6 +3335,7 @@
         const chained = state.turn.cardsPlayed > 1 && effectiveCost === 0 && state.turn.lastPlayedNumber !== null;
         if (chained) {
           state.turn.chainCount++;
+          state.stats.chains++;
           const A = state.turn.lastPlayedNumber;
           const B = card.number;
           const rel = A % B === 0 ? `${A}÷${B}=${A/B}` : `${B}÷${A}=${B/A}`;
@@ -3254,6 +3594,10 @@
 
         state.selectedCard = null;
 
+        if (result.rank === "critical") state.stats.criticals++;
+        else if (result.rank === "enhanced") state.stats.enhanced++;
+        else if (result.rank === "normal") state.stats.normals++;
+
         await animatePlayerAttack(result, card);
 
         discardCard(card);
@@ -3441,19 +3785,322 @@
       showGameOverModal();
     }
 
+    const RANKING_API_URL = "https://script.google.com/macros/s/AKfycbz14WBXtIBwmZvZZiPFnxGFFlcybVWUdPDq8kmlm8bnaqSqI3cqMiEjJmMWtay2B5BU/exec";
+
+    function buildDeckSnapshot() {
+      const allCards = [...state.player.deck, ...state.player.hand, ...state.player.discard];
+      return allCards.map(c => ({
+        name: c.name,
+        number: c.number || 0,
+        isSkill: !!c.isSkill,
+        concept: c.concept || "",
+        rarity: c.rarity || "C",
+        apCost: c.apCost ?? 1,
+        desc: c.desc || c.effectText || ""
+      }));
+    }
+
     function showGameOverModal() {
       const overlay = document.getElementById("gameOverModal");
-      const stageEl = document.getElementById("gameOverStage");
-      const msgEl = document.getElementById("gameOverMsg");
       if (!overlay) return;
-      stageEl.textContent = `도달 스테이지: ${state.stage} 스테이지`;
-      msgEl.textContent = "수학적 관계를 잊지 마세요. 약수, 배수, 공약수, 공배수로 더 강한 공격을 할 수 있습니다.";
+
+      document.getElementById("gameOverStage").textContent = `도달 스테이지: ${state.stage}`;
+
+      const statsEl = document.getElementById("gameOverStats");
+      const s = state.stats;
+      statsEl.innerHTML = `
+        <span class="stat-label">🔗 체인 성공</span><span class="stat-value">${s.chains}회</span>
+        <span class="stat-label">💥 크리티컬</span><span class="stat-value">${s.criticals}회</span>
+        <span class="stat-label">⚡ 강화 공격</span><span class="stat-value">${s.enhanced}회</span>
+        <span class="stat-label">⚔️ 일반 공격</span><span class="stat-value">${s.normals}회</span>
+      `;
+
+      document.getElementById("gameOverNickInput").value = "";
+      document.getElementById("gameOverRankMsg").textContent = "닉네임을 입력하고 랭킹에 등록하세요! (개인정보 포함 금지)";
+      document.getElementById("gameOverSubmitRank").disabled = false;
+      document.getElementById("gameOverRankingArea").innerHTML = "";
+
       overlay.style.display = "flex";
     }
 
     function hideGameOverModal() {
       const overlay = document.getElementById("gameOverModal");
       if (overlay) overlay.style.display = "none";
+    }
+
+    async function submitRanking() {
+      const nickInput = document.getElementById("gameOverNickInput");
+      const msgEl = document.getElementById("gameOverRankMsg");
+      const btn = document.getElementById("gameOverSubmitRank");
+      const nick = nickInput.value.trim();
+
+      if (nick.length < 2 || nick.length > 12) {
+        msgEl.textContent = "닉네임은 2~12자로 입력해주세요.";
+        return;
+      }
+
+      if (!RANKING_API_URL) {
+        msgEl.textContent = "랭킹 서버가 설정되지 않았습니다. (RANKING_API_URL 설정 필요)";
+        return;
+      }
+
+      btn.disabled = true;
+      msgEl.textContent = "등록 중...";
+
+      try {
+        const payload = {
+          action: "submit",
+          nickname: nick,
+          stage: state.stage,
+          chains: state.stats.chains,
+          criticals: state.stats.criticals,
+          enhanced: state.stats.enhanced,
+          normals: state.stats.normals,
+          deck: JSON.stringify(buildDeckSnapshot())
+        };
+
+        const res = await fetch(RANKING_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          msgEl.textContent = `✅ 랭킹 등록 완료! (${nick})`;
+          btn.disabled = true;
+        } else {
+          msgEl.textContent = `❌ 등록 실패: ${data.error || "알 수 없는 오류"}`;
+          btn.disabled = false;
+        }
+      } catch (e) {
+        msgEl.textContent = `❌ 서버 연결 실패: ${e.message}`;
+        btn.disabled = false;
+      }
+    }
+
+    async function fetchRanking() {
+      const area = document.getElementById("gameOverRankingArea");
+      if (!RANKING_API_URL) {
+        area.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.82rem;padding:10px;">랭킹 서버가 설정되지 않았습니다.</div>`;
+        return;
+      }
+
+      area.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.82rem;padding:10px;">불러오는 중...</div>`;
+
+      try {
+        const res = await fetch(`${RANKING_API_URL}?action=getRanking`);
+        const data = await res.json();
+
+        if (!data.ranking || data.ranking.length === 0) {
+          area.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.82rem;padding:10px;">아직 등록된 랭킹이 없습니다.</div>`;
+          return;
+        }
+
+        let rows = data.ranking.map((r, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td class="nick-cell" data-deck='${(r.deck || "[]").replace(/'/g, "&#39;")}'>${r.nickname}</td>
+            <td>${r.stage}</td>
+            <td>${r.chains}</td>
+            <td>${r.criticals}</td>
+            <td>${r.enhanced}</td>
+            <td>${r.normals}</td>
+          </tr>
+        `).join("");
+
+        area.innerHTML = `
+          <div class="ranking-table-wrap">
+            <table class="ranking-table">
+              <thead><tr>
+                <th>#</th><th>닉네임</th><th>스테이지</th>
+                <th>🔗</th><th>💥</th><th>⚡</th><th>⚔️</th>
+              </tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+
+        area.querySelectorAll(".nick-cell").forEach(cell => {
+          cell.addEventListener("click", () => {
+            try {
+              const deck = JSON.parse(cell.dataset.deck || "[]");
+              showDeckPreview(cell.textContent, deck);
+            } catch(e) {}
+          });
+        });
+      } catch (e) {
+        area.innerHTML = `<div style="color:#ff6b6b;font-size:0.82rem;padding:10px;">랭킹 로딩 실패: ${e.message}</div>`;
+      }
+    }
+
+    function showDeckPreview(nickname, deck) {
+      const modal = document.getElementById("deckPreviewModal");
+      document.getElementById("deckPreviewTitle").textContent = `${nickname}의 덱 구성`;
+      const cardsEl = document.getElementById("deckPreviewCards");
+
+      if (!deck || deck.length === 0) {
+        cardsEl.innerHTML = `<div style="color:rgba(255,255,255,0.4);padding:10px;">덱 정보가 없습니다.</div>`;
+      } else {
+        cardsEl.innerHTML = deck.map(c => {
+          if (c.isSkill) {
+            const ci = CONCEPT_INFO[c.concept] || {};
+            return `<div class="deck-preview-card">
+              <div class="dp-name">${ci.emoji || "✦"} ${c.name}</div>
+              <div class="dp-skill">AP ${c.apCost} · ${c.desc}</div>
+            </div>`;
+          }
+          return `<div class="deck-preview-card">
+            <div class="dp-name">${c.name}</div>
+            <div class="dp-num">숫자 ${c.number} · AP ${c.apCost}</div>
+          </div>`;
+        }).join("");
+      }
+
+      modal.classList.add("open");
+    }
+
+    // ============================================================
+    //  랭킹 · 기록 모달
+    // ============================================================
+    let _cachedRankingData = null;
+    let _rankingSortKey = "stage";
+
+    function openRankingModal() {
+      const overlay = document.getElementById("rankingModalOverlay");
+      renderMyRecord();
+      document.getElementById("rankingSearchInput").value = "";
+      document.getElementById("rankingSearchResult").innerHTML = "";
+      overlay.classList.add("open");
+      if (!_cachedRankingData) {
+        loadRankingForModal();
+      } else {
+        renderRankingTable(_cachedRankingData, _rankingSortKey);
+      }
+    }
+
+    function closeRankingModal() {
+      document.getElementById("rankingModalOverlay").classList.remove("open");
+    }
+
+    function renderMyRecord() {
+      const panel = document.getElementById("myRecordPanel");
+      const s = state.stats;
+      panel.innerHTML = `
+        <div><div class="mr-label">현재 스테이지</div><div class="mr-value">${state.stage}</div></div>
+        <div><div class="mr-label">🔗 체인 성공</div><div class="mr-value">${s.chains}회</div></div>
+        <div><div class="mr-label">💥 크리티컬</div><div class="mr-value">${s.criticals}회</div></div>
+        <div><div class="mr-label">⚡ 강화 공격</div><div class="mr-value">${s.enhanced}회</div></div>
+        <div><div class="mr-label">⚔️ 일반 공격</div><div class="mr-value">${s.normals}회</div></div>
+      `;
+    }
+
+    async function loadRankingForModal() {
+      const area = document.getElementById("rankingTableArea");
+      if (!RANKING_API_URL) {
+        area.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.82rem;padding:12px;">랭킹 서버가 설정되지 않았습니다. (RANKING_API_URL 필요)</div>`;
+        return;
+      }
+      area.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.82rem;padding:12px;">불러오는 중...</div>`;
+      try {
+        const res = await fetch(`${RANKING_API_URL}?action=getRanking`);
+        const data = await res.json();
+        _cachedRankingData = data.ranking || [];
+        renderRankingTable(_cachedRankingData, _rankingSortKey);
+      } catch (e) {
+        area.innerHTML = `<div style="color:#ff6b6b;font-size:0.82rem;padding:12px;">랭킹 로딩 실패: ${e.message}</div>`;
+      }
+    }
+
+    function renderRankingTable(ranking, sortKey) {
+      const area = document.getElementById("rankingTableArea");
+      if (!ranking || ranking.length === 0) {
+        area.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.82rem;padding:12px;">아직 등록된 랭킹이 없습니다.</div>`;
+        return;
+      }
+
+      const sorted = [...ranking].sort((a, b) => {
+        const diff = (b[sortKey] || 0) - (a[sortKey] || 0);
+        if (diff !== 0) return diff;
+        return (b.stage || 0) - (a.stage || 0);
+      });
+
+      const rows = sorted.map((r, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td class="nick-cell" data-deck='${(r.deck || "[]").replace(/'/g, "&#39;")}'>${r.nickname}</td>
+          <td>${r.stage}</td>
+          <td>${r.chains}</td>
+          <td>${r.criticals}</td>
+          <td>${r.enhanced}</td>
+          <td>${r.normals}</td>
+        </tr>
+      `).join("");
+
+      area.innerHTML = `
+        <div class="ranking-table-wrap">
+          <table class="ranking-table">
+            <thead><tr>
+              <th>#</th><th>닉네임</th><th>스테이지</th>
+              <th>🔗</th><th>💥</th><th>⚡</th><th>⚔️</th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+
+      area.querySelectorAll(".nick-cell").forEach(cell => {
+        cell.addEventListener("click", () => {
+          try {
+            const deck = JSON.parse(cell.dataset.deck || "[]");
+            showDeckPreview(cell.textContent, deck);
+          } catch(e) {}
+        });
+      });
+    }
+
+    async function searchNickname() {
+      const input = document.getElementById("rankingSearchInput");
+      const area = document.getElementById("rankingSearchResult");
+      const nick = (input.value || "").trim();
+      if (!nick) { area.innerHTML = ""; return; }
+      if (!RANKING_API_URL) {
+        area.innerHTML = `<div class="ranking-search-result-card" style="color:#ff6e6e;">랭킹 서버가 설정되지 않았습니다.</div>`;
+        return;
+      }
+      area.innerHTML = `<div style="color:rgba(255,255,255,0.4);font-size:0.82rem;padding:6px;">검색 중...</div>`;
+      try {
+        const res = await fetch(RANKING_API_URL + "?action=searchNickname&nickname=" + encodeURIComponent(nick));
+        const json = await res.json();
+        if (!json.success || !json.results || json.results.length === 0) {
+          area.innerHTML = `<div class="ranking-search-result-card" style="color:rgba(255,255,255,0.5);">"${nick}" 닉네임을 찾을 수 없습니다.</div>`;
+          return;
+        }
+        area.innerHTML = json.results.map(r => `
+          <div class="ranking-search-result-card">
+            <span class="sr-rank">#${r.rank}</span>
+            <span class="sr-nick">${r.nickname}</span>
+            <span style="color:rgba(255,255,255,0.4);font-size:0.78rem;margin-left:6px;">스테이지 ${r.stage}</span>
+            <div class="sr-stats">
+              <span>🔗 체인 ${r.chains}</span>
+              <span>💥 크리티컬 ${r.criticals}</span>
+              <span>⚡ 강화 ${r.enhanced}</span>
+              <span>⚔️ 일반 ${r.normals}</span>
+            </div>
+            <button class="sr-deck-btn" data-deck='${(r.deck || "[]").replace(/'/g, "&#39;")}' data-nick="${r.nickname}">🃏 덱 보기</button>
+          </div>
+        `).join("");
+        area.querySelectorAll(".sr-deck-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            try {
+              const deck = JSON.parse(btn.dataset.deck || "[]");
+              showDeckPreview(btn.dataset.nick, deck);
+            } catch(e) {}
+          });
+        });
+      } catch(e) {
+        area.innerHTML = `<div class="ranking-search-result-card" style="color:#ff6e6e;">검색 실패: ${e.message}</div>`;
+      }
     }
 
     // ============================================================
@@ -4128,6 +4775,7 @@
       state.player.hand = [];
       state.player.status = { weaken: 0, frail: 0, bleed: 0 };
       state.pendingExtraDraw = 0;
+      state.stats = { chains: 0, criticals: 0, enhanced: 0, normals: 0 };
       state.deckView.open = false;
       state.deckView.sortMode = "number_desc";
       state.swapView.open = false;
@@ -4162,6 +4810,7 @@
           player: JSON.parse(JSON.stringify(state.player)),
           villain: state.villain ? JSON.parse(JSON.stringify(state.villain)) : null,
           pendingExtraDraw: state.pendingExtraDraw,
+          stats: JSON.parse(JSON.stringify(state.stats)),
           turn: JSON.parse(JSON.stringify(state.turn)),
           selectedCard: null,
           runOver: false
@@ -4191,6 +4840,7 @@
         state.villain = snap.villain ?? null;
         state.selectedCard = null;
         state.pendingExtraDraw = snap.pendingExtraDraw ?? 0;
+        state.stats = snap.stats ?? { chains: 0, criticals: 0, enhanced: 0, normals: 0 };
         if (snap.turn) {
           state.turn = { ...state.turn, ...snap.turn };
         } else {
@@ -4211,6 +4861,33 @@
     document.getElementById("gameOverNewRunBtn").addEventListener("click", () => {
       hideGameOverModal();
       newRun();
+    });
+    document.getElementById("gameOverSubmitRank").addEventListener("click", submitRanking);
+    document.getElementById("gameOverViewRanking").addEventListener("click", fetchRanking);
+    document.getElementById("closeDeckPreviewBtn").addEventListener("click", () => {
+      document.getElementById("deckPreviewModal").classList.remove("open");
+    });
+    document.getElementById("deckPreviewModal").addEventListener("click", e => {
+      if (e.target === document.getElementById("deckPreviewModal")) {
+        document.getElementById("deckPreviewModal").classList.remove("open");
+      }
+    });
+    document.getElementById("openRankingBtn").addEventListener("click", openRankingModal);
+    document.getElementById("closeRankingModalBtn").addEventListener("click", closeRankingModal);
+    document.getElementById("rankingModalOverlay").addEventListener("click", e => {
+      if (e.target === document.getElementById("rankingModalOverlay")) closeRankingModal();
+    });
+    document.getElementById("rankingTabs").addEventListener("click", e => {
+      const tab = e.target.closest(".ranking-tab");
+      if (!tab) return;
+      _rankingSortKey = tab.dataset.sort;
+      document.querySelectorAll("#rankingTabs .ranking-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      if (_cachedRankingData) renderRankingTable(_cachedRankingData, _rankingSortKey);
+    });
+    document.getElementById("rankingSearchBtn").addEventListener("click", searchNickname);
+    document.getElementById("rankingSearchInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") searchNickname();
     });
     deckViewBtnEl.addEventListener("click", () => toggleDeckModal(true));
     closeDeckModalBtnEl.addEventListener("click", () => toggleDeckModal(false));
