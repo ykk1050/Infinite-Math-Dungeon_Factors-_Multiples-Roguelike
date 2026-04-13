@@ -1215,7 +1215,7 @@
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00014</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00015</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -2286,6 +2286,7 @@
       state.turn.lastContagionMultiple = false;
       state.turn.mirrorShieldActive = false;
       state.turn.thornReflectAmount = 0;
+      state.turn.divisorHealActive = false;
       state.turn.pendingPickEffect = null;
       state.turn.mergeTarget1 = null;
     }
@@ -2423,8 +2424,8 @@
           addLog(`${prefix} 거울 방패 활성화! 적의 저주를 반사합니다`, ["스킬", "방어"]);
           break;
         case "divisorHeal":
-          p.hp = Math.min(p.maxHp, p.hp + 5);
-          addLog(`${prefix} 약수 보급! HP +5 (현재 ${p.hp})`, ["스킬", "회복"]);
+          state.turn.divisorHealActive = true;
+          addLog(`${prefix} 약수 보급 활성화! 이번 턴 약수 공격 성공 시 HP +5`, ["스킬", "회복"]);
           break;
         case "evenCastle": {
           let count = 0;
@@ -3205,6 +3206,11 @@
         const isSuccess = result.rank !== "miss";
         const isEnhancedOrAbove = result.rank === "enhanced" || isCritical;
 
+        if (state.turn.divisorHealActive && isSuccess) {
+          state.player.hp = Math.min(state.player.maxHp, state.player.hp + 5);
+          addLog(`🛡️ 약수 보급! 약수/배수 공격 성공 → HP +5 (현재 ${state.player.hp})`, ["스킬", "회복"]);
+        }
+
         if (card.effect && isSuccess) {
           if (card.effect === "heal") {
             const healAmt = Math.floor(card.number / 4) + 2;
@@ -3922,7 +3928,6 @@
           const chained = inBattle && state.turn.cardsPlayed > 0 && effectiveCost === 0;
           const playable = inBattle && canPlayCard(card);
 
-          if (inBattle && chained) cardEl.classList.add("chainable");
           if (inBattle && !playable && !state.turnLocked) cardEl.classList.add("no-ap");
 
           const relationHint = "";
@@ -3931,8 +3936,8 @@
             ? `<div class="effect-text ${ei.cls}">${ei.emoji} ${card.effectText}</div>`
             : "";
 
-          const costLabel = chained ? "FREE" : `AP ${effectiveCost}`;
-          const costCls = chained ? "cost-badge free" : "cost-badge";
+          const costLabel = `AP ${card.apCost}`;
+          const costCls = "cost-badge";
 
           cardEl.innerHTML = `
             <div class="rarity-badge ${ri.cls}">${ri.label}</div>
