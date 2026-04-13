@@ -1511,7 +1511,7 @@
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00017</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00018</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -2184,7 +2184,7 @@
 
     function playSfx(gifSrc) {
       const gifFile = gifSrc.split("?")[0].split("/").pop();
-      const mp3File = SFX_MAP[gifFile];
+      const mp3File = SFX_MAP[gifFile] || (gifFile.endsWith(".mp3") ? gifFile : null);
       if (!mp3File) return;
 
       if (_activeSfxCount === 0) {
@@ -2549,6 +2549,8 @@
       const portraitEl = document.getElementById("villainPortrait");
       if (result.rank !== "miss" && RANK_GIF[result.rank]) {
         spawnGifEffect(portraitEl || villainAreaEl, RANK_GIF[result.rank], result.rank === "critical" ? 2200 : 1600);
+      } else {
+        playSfx("basic.mp3");
       }
 
       if (result.rank === "critical") {
