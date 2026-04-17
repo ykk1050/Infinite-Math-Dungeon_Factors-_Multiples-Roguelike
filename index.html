@@ -1511,7 +1511,7 @@
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00018</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00019</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -4394,6 +4394,7 @@
         rewardAreaEl.innerHTML = "";
         return;
       }
+      if (rewardAreaEl.querySelector("#rewardCardsGrid")) return;
       const rewardCards = generateRewardCards();
       const box = document.createElement("div");
       box.className = "reward-box";
@@ -4964,7 +4965,11 @@
     function renderAll() {
       renderMap();
       renderVillain();
-      if (state.mode !== "reward") rewardAreaEl.innerHTML = "";
+      if (state.mode === "reward") {
+        renderRewardChoices();
+      } else {
+        rewardAreaEl.innerHTML = "";
+      }
       renderHand();
       renderCalcGuide();
       updateTop();
