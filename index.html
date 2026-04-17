@@ -1511,7 +1511,7 @@
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00019</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.0002</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -2747,7 +2747,7 @@
           item.style.cursor = "pointer";
           const ci = c.isSkill ? (CONCEPT_INFO[c.concept] || {}) : {};
           const numLabel = c.isSkill
-            ? `${ci.emoji || "✦"} AP ${c.apCost}`
+            ? `${ci.emoji || "✦"} AP ${c.apCost ?? 0}`
             : `숫자 ${c.number}`;
           item.innerHTML = `<span><strong>${c.name}</strong> — ${numLabel}</span>`;
           item.addEventListener("click", () => {
@@ -4195,12 +4195,12 @@
             const ci = CONCEPT_INFO[c.concept] || {};
             return `<div class="deck-preview-card">
               <div class="dp-name">${ci.emoji || "✦"} ${c.name}</div>
-              <div class="dp-skill">AP ${c.apCost} · ${c.desc}</div>
+              <div class="dp-skill">AP ${c.apCost ?? 0} · ${c.desc}</div>
             </div>`;
           }
           return `<div class="deck-preview-card">
             <div class="dp-name">${c.name}</div>
-            <div class="dp-num">숫자 ${c.number} · AP ${c.apCost}</div>
+            <div class="dp-num">숫자 ${c.number} · AP ${c.apCost ?? 1}</div>
           </div>`;
         }).join("");
       }
@@ -4429,7 +4429,7 @@
               <span class="concept-tag ${card.concept}" style="font-size:0.72rem;">${ci.label}</span>
             </div>
             <div class="card-name">${card.name}</div>
-            <div class="small">AP 코스트: ${card.apCost}</div>
+            <div class="small">AP 코스트: ${card.apCost ?? 1}</div>
             <div style="font-size:0.78rem;color:${ci.color || '#ccc'};margin-top:5px;">${card.desc}</div>
           `;
         } else {
@@ -4638,7 +4638,7 @@
           return `
             <div class="pile-card" style="border-color:${ci.color || 'inherit'}44;">
               <span><span class="pile-rarity ${ri.cls}">${ri.label}</span>${ci.emoji || "✦"} ${card.name}</span>
-              <span style="color:${ci.color || 'var(--muted)'};">AP ${card.apCost} · ${ci.label || "스킬"}</span>
+              <span style="color:${ci.color || 'var(--muted)'};">AP ${card.apCost ?? 0} · ${ci.label || "스킬"}</span>
             </div>
           `;
         }
@@ -4834,7 +4834,7 @@
             ? `<div class="effect-text ${ei.cls}">${ei.emoji} ${card.effectText}</div>`
             : "";
 
-          const costLabel = `AP ${card.apCost}`;
+          const costLabel = `AP ${card.apCost ?? 1}`;
           const costCls = "cost-badge";
 
           cardEl.innerHTML = `
@@ -5087,6 +5087,9 @@
         state.player.deck = snap.player.deck ?? [];
         state.player.discard = snap.player.discard ?? [];
         state.player.hand = snap.player.hand ?? [];
+        [state.player.deck, state.player.discard, state.player.hand].forEach(pile =>
+          pile.forEach(c => { if (c.apCost === undefined) c.apCost = c.isSkill ? 0 : 1; })
+        );
         state.player.status = snap.player.status ?? { weaken: 0, frail: 0, bleed: 0 };
         state.villain = snap.villain ?? null;
         state.selectedCard = null;
