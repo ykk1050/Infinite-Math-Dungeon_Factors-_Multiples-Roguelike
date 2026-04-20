@@ -1500,10 +1500,10 @@
       <ul class="rule-list">
         <li>매 턴 <strong>3 AP</strong>가 주어지며, AP를 소모해 카드를 사용합니다. 일반 카드 1 AP, 스킬 카드 0~2 AP.</li>
         <li><strong style="color:var(--good)">🔗 수학 연쇄(Chain):</strong> 이전에 낸 카드 숫자와 약수/배수 관계인 카드를 내면 <strong>AP 0</strong>으로 무료 사용!</li>
-        <li>한 턴에 최대 <strong>5장</strong>까지 사용 가능. <strong style="color:var(--critical)">크리티컬</strong> 시 AP +1 회복 & 카드 한도 +1.</li>
+        <li>턴당 카드 장수 제한은 없으며, AP가 남아 있는 한 계속 사용 가능. <strong style="color:var(--critical)">크리티컬</strong> 시 AP +1 회복.</li>
         <li>연쇄 횟수만큼 <strong>콤보 보너스(+10%씩 중첩)</strong>가 적용됩니다.</li>
         <li>매 턴 적이 1~2개의 <strong>타겟 숫자</strong>를 제시합니다.</li>
-        <li><strong style="color:var(--critical)">[크리티컬]</strong> N = GCD 또는 LCM → <strong>3배</strong> + 기절</li>
+        <li><strong style="color:var(--critical)">[크리티컬]</strong> N = 최대공약수 또는 최소공배수 → <strong>3배</strong> + 기절</li>
         <li><strong style="color:var(--accent)">[강화]</strong> N이 모든 타겟의 공약수/공배수 → <strong>2배</strong> + 방어막</li>
         <li><strong style="color:var(--good)">[일반]</strong> 하나라도 약수/배수 → <strong>1.5배</strong></li>
         <li><strong style="color:var(--muted)">[기본]</strong> 관계 없음 → <strong>1배</strong></li>
@@ -1511,7 +1511,7 @@
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.0002</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00021</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -1745,7 +1745,7 @@
       { id: "sk_d03", name: "숫자 고정 못",    concept: "defense", apCost: 1, rarity: "A",
         desc: "적의 타겟 숫자 하나를 다음 턴에도 유지", skillEffect: "pinTarget" },
       { id: "sk_d04", name: "방어 태세",       concept: "defense", apCost: 2, rarity: "A",
-        desc: "데미지 0, 방어막 대량 획득", skillEffect: "defenseStance" },
+        desc: "방어막 +20. 이번 턴 공격 카드 사용 불가 (스킬은 사용 가능)", skillEffect: "defenseStance" },
       { id: "sk_d05", name: "약수의 가시",     concept: "defense", apCost: 1, rarity: "B",
         desc: "낸 약수 카드의 숫자만큼 적에게 반사 데미지", skillEffect: "thornDivisor" },
       { id: "sk_d06", name: "나눗셈 보호막",   concept: "defense", apCost: 1, rarity: "B",
@@ -2061,7 +2061,7 @@
     //  게임 상태
     // ============================================================
     const BASE_AP = 3;
-    const BASE_CARD_LIMIT = 5;
+    const BASE_CARD_LIMIT = Infinity;
 
     const state = {
       stage: 1,
@@ -2710,7 +2710,9 @@
     }
 
     function canPlayCard(card) {
-      if (state.turn.cardsPlayed >= state.turn.cardLimit) return false;
+      // 스킬 카드는 카드 사용 한도(cardLimit) 제한을 받지 않음
+      // (예: '방어 태세'가 cardLimit=0으로 공격만 막는 의도와 일치)
+      if (!card.isSkill && state.turn.cardsPlayed >= state.turn.cardLimit) return false;
       return getEffectiveApCost(card) <= state.turn.ap;
     }
 
@@ -2862,7 +2864,7 @@
           break;
         case "lcmFortress":
           state.turn.lcmFortressActive = true;
-          addLog(`${prefix} 최소의 보루! 이번 턴 크리티컬(LCM/GCD) 적중 시 HP 전체 회복`, ["스킬", "방어"]);
+          addLog(`${prefix} 최소의 보루! 이번 턴 크리티컬(최대공약수/최소공배수) 적중 시 HP 전체 회복`, ["스킬", "방어"]);
           break;
         case "guardianNumber":
           state.turn.guardianNumberActive = true;
@@ -2911,7 +2913,7 @@
           break;
         case "lcmCannon":
           state.turn.lcmCannonActive = true;
-          addLog(`${prefix} 최소공배수 포! 이번 턴 크리티컬(LCM/GCD) 적중 시 적 HP 30% 추가 피해`, ["스킬", "공격"]);
+          addLog(`${prefix} 최소공배수 포! 이번 턴 크리티컬(최대공약수/최소공배수) 적중 시 적 HP 30% 추가 피해`, ["스킬", "공격"]);
           break;
         case "rampageMode":
           drawCards(3);
@@ -3243,7 +3245,11 @@
 
       const card = state.selectedCard;
       if (!canPlayCard(card)) {
-        addLog("AP가 부족하거나 카드 사용 한도에 도달했습니다.", ["알림"]);
+        if (!card.isSkill && state.turn.cardsPlayed >= state.turn.cardLimit) {
+          addLog("이번 턴은 더 이상 공격 카드를 사용할 수 없습니다.", ["알림"]);
+        } else {
+          addLog("AP가 부족합니다.", ["알림"]);
+        }
         return;
       }
 
@@ -3673,7 +3679,7 @@
         if (isCritical) {
           state.turn.ap = Math.min(state.turn.ap + 1, state.turn.maxAp + 1);
           state.turn.cardLimit++;
-          addLog("⚡ 크리티컬 보너스: AP +1 회복 & 카드 한도 +1!", ["크리티컬"]);
+          addLog("⚡ 크리티컬 보너스: AP +1 회복!", ["크리티컬"]);
         }
 
         const isSuccess = result.rank !== "miss";
@@ -4955,7 +4961,10 @@
         const lastNumHtml = state.turn.lastPlayedNumber !== null
           ? `<span class="last-played-num">이전에 낸 카드의 숫자 : <strong>${state.turn.lastPlayedNumber}</strong></span>`
           : `<span class="last-played-num" style="opacity:0.4;">이전에 낸 카드의 숫자 : --</span>`;
-        apBarAreaEl.innerHTML = `<span class="ap-label">AP</span>${orbsHtml}<span class="ap-info">${state.turn.ap}/${state.turn.maxAp} · 카드 ${state.turn.cardsPlayed}/${state.turn.cardLimit}장</span>${lastNumHtml}${chainHtml}`;
+        const cardCountHtml = Number.isFinite(state.turn.cardLimit)
+          ? `카드 ${state.turn.cardsPlayed}/${state.turn.cardLimit}장`
+          : `카드 ${state.turn.cardsPlayed}장 사용`;
+        apBarAreaEl.innerHTML = `<span class="ap-label">AP</span>${orbsHtml}<span class="ap-info">${state.turn.ap}/${state.turn.maxAp} · ${cardCountHtml}</span>${lastNumHtml}${chainHtml}`;
       } else {
         apBarAreaEl.style.display = "none";
         apBarAreaEl.innerHTML = "";
@@ -5097,6 +5106,10 @@
         state.stats = snap.stats ?? { chains: 0, criticals: 0, enhanced: 0, normals: 0 };
         if (snap.turn) {
           state.turn = { ...state.turn, ...snap.turn };
+          // JSON.stringify(Infinity) === "null" 이므로 복원 시 되돌려줌
+          if (state.turn.cardLimit === null || state.turn.cardLimit === undefined) {
+            state.turn.cardLimit = BASE_CARD_LIMIT;
+          }
         } else {
           resetTurnState();
         }
