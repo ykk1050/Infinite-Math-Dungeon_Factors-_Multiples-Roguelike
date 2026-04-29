@@ -1511,7 +1511,7 @@
       </ul>
     </section>
   </div>
-  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00022</div>
+  <div class="footer-credit">Infinite Math Dungeon: Factors &amp; Multiples Roguelike made by gamtudyssam 0.00023</div>
 
   <div id="deckModal" class="deck-modal">
     <div class="deck-modal-content">
@@ -2605,6 +2605,9 @@
         state.player.status.bleed--;
         addLog("출혈로 2 피해", ["디버프"]);
       }
+      // 약화·취약 지속: 출혈과 동일하게 턴 시작 시만 감소
+      if (state.player.status.weaken > 0) state.player.status.weaken--;
+      if (state.player.status.frail > 0) state.player.status.frail--;
     }
 
     function applyVillainIntent() {
@@ -3980,8 +3983,6 @@
           }
         }
 
-        if (state.player.status.weaken > 0) state.player.status.weaken--;
-        if (state.player.status.frail > 0) state.player.status.frail--;
         if (state.villain && state.villain.status) {
           if (state.villain.status.weaken > 0) state.villain.status.weaken--;
           if (state.villain.status.frail > 0) state.villain.status.frail--;
